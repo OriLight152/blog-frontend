@@ -1,0 +1,175 @@
+<template>
+  <div class="w-full">
+    <div class="w-[400px] bg-white mt-4 mx-auto px-8 pt-2 pb-6 rounded-[10px] overflow-hidden shadow-sm">
+      <template v-if="!isRegister">
+        <h1 class="text-center">用户登录</h1>
+        <div class="border rounded-md mt-10">
+          <div class="flex items-center pl-3 border-b">
+            <span class="w-[50px]">用户名</span>
+            <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入用户名"
+              v-model="loginParams.username">
+          </div>
+          <div class="flex items-center pl-3">
+            <span class="w-[50px]">密码</span>
+            <input class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码"
+              v-model="loginParams.password">
+          </div>
+        </div>
+        <div class="flex justify-center mt-10">
+          <NormalButton class="mr-2" @click="isRegister = true">前往注册</NormalButton>
+          <NormalButton @click="handleLogin">登录</NormalButton>
+        </div>
+      </template>
+      <template v-else>
+        <h1 class="text-center">用户注册</h1>
+        <div class="border rounded-md mt-10">
+          <div class="flex items-center pl-3 border-b">
+            <span class="w-[50px]">用户名</span>
+            <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入用户名"
+              v-model="registerParams.username">
+          </div>
+          <div class="flex items-center pl-3 border-b">
+            <span class="w-[50px]">昵称</span>
+            <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入昵称"
+              v-model="registerParams.nickname">
+          </div>
+          <div class="flex items-center pl-3 border-b">
+            <span class="w-[50px]">邮箱</span>
+            <input class="flex-1 h-[40px] px-3 outline-none" type="email" placeholder="请输入邮箱"
+              v-model="registerParams.email">
+          </div>
+          <div class="flex items-center pl-3">
+            <span class="w-[50px]">密码</span>
+            <input class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码"
+              v-model="registerParams.password">
+          </div>
+        </div>
+        <div class="pl-3 mt-2">
+          <span>性别</span>
+          <label for="sex_male" class="ml-2"><input type="radio" name="sex" id="sex_male" value="MALE"
+              v-model="registerParams.sex">
+            男</label>
+          <label for="sex_female" class="ml-2"><input type="radio" name="sex" id="sex_female" value="FEMALE"
+              v-model="registerParams.sex">
+            女</label>
+          <label for="sex_secret" class="ml-2"><input type="radio" name="sex" id="sex_secret" value="SECRET"
+              v-model="registerParams.sex">
+            保密</label>
+        </div>
+        <div class="flex justify-center mt-10">
+          <NormalButton class="mr-2" @click="isRegister = false">返回登录</NormalButton>
+          <NormalButton @click="handleRegister">注册</NormalButton>
+        </div>
+      </template>
+      <div v-if="devMode">
+        <div>isRegister {{ isRegister }}</div>
+        <div>loginParams {{ loginParams }}</div>
+        <div>registerParams {{ registerParams }}</div>
+        <div>vaildUserId {{ vaildUserId }}</div>
+        <div>vaildEmail {{ vaildEmail }}</div>
+        <div>vaildUserPwd {{ vaildUserPwd }}</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { login, register } from '@/api/user';
+import NormalButton from '@/components/common/button/NormalButton.vue';
+import router from '@/router';
+import { useStore } from '@/store';
+import { computed, ref, toRefs } from 'vue';
+import { useToast } from 'vue-toastification';
+
+const store = useStore()
+const toast = useToast()
+
+const { devMode } = toRefs(store)
+const reUserId = /^[a-z0-9-_]{5,15}$/
+const rePassword = /^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$/
+const reEmail = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
+const isRegister = ref(false)
+const loginParams = ref({
+  username: '',
+  password: ''
+})
+const registerParams = ref({
+  username: '',
+  nickname: '',
+  password: '',
+  email: '',
+  sex: 'MALE'
+})
+
+const vaildUserId = computed(() => reUserId.test(registerParams.value.username) || registerParams.value.username == '')
+const vaildUserPwd = computed(() => rePassword.test(registerParams.value.password) || registerParams.value.password == '')
+const vaildEmail = computed(() => reEmail.test(registerParams.value.email))
+
+async function handleLogin() {
+  if (loginParams.value.username.trim() === '') {
+    toast.warning('用户名不可为空')
+    return
+  }
+  if (loginParams.value.password.trim() === '') {
+    toast.warning('密码不可为空')
+    return
+  }
+  login(loginParams.value.username.trim(), loginParams.value.password.trim())
+    .then((result: any) => {
+      toast.success('登录成功')
+      store.login = true
+      store.uid = result['id']
+      store.token = result['token']
+      localStorage.setItem('uid', result['id'])
+      localStorage.setItem('token', result['token'])
+      router.push('/profile')
+    })
+    .catch((err: any) => {
+      toast.error('登录失败：' + err)
+    });
+}
+async function handleRegister() {
+  if (registerParams.value.username.trim() === '') {
+    toast.warning('用户名不可为空')
+    return
+  }
+  if (registerParams.value.nickname.trim() === '') {
+    toast.warning('昵称不可为空')
+    return
+  }
+  if (registerParams.value.email.trim() === '') {
+    toast.warning('邮箱不可为空')
+    return
+  }
+  if (registerParams.value.password.trim() === '') {
+    toast.warning('密码不可为空')
+    return
+  }
+  if (!vaildUserId.value) {
+    toast.warning('用户名格式错误')
+    return
+  }
+  if (!vaildEmail.value) {
+    toast.warning('邮箱格式错误')
+    return
+  }
+  if (!vaildUserPwd.value) {
+    toast.warning('密码格式错误')
+    return
+  }
+  register(registerParams.value.username.trim(), registerParams.value.nickname.trim(), registerParams.value.password.trim(), registerParams.value.email.trim(), registerParams.value.sex)
+    .then((result) => {
+      toast.success('注册成功')
+      isRegister.value = false
+    })
+    .catch((err) => {
+      toast.error('注册失败：' + err)
+    });
+}
+
+
+</script>
+
+<style scoped>
+
+</style>
