@@ -5,7 +5,7 @@ import routes from "./routes";
 import { verify } from "@/api/user";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 const blockBeforeLogin = ['/profile']
