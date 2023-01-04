@@ -3,7 +3,7 @@
     <div class="absolute top-4 right-4" v-if="enableEditMode">
       <NormalButton @click="handleLogout">退出登录</NormalButton>
     </div>
-    <h2>{{ enableEditMode ? '我的' : '用户' }}信息</h2>
+    <h2>{{ enableEditMode? '我的': '用户' }}信息</h2>
     <template v-if="!userProfile">
       <div class="text-center">加载中</div>
     </template>
@@ -32,7 +32,7 @@
     <NormalButton @click="handleNewPost">发布</NormalButton>
   </div>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
-    <h2>{{ enableEditMode ? '我的' : '用户' }}博客</h2>
+    <h2>{{ enableEditMode? '我的': '用户' }}博客</h2>
     <div class="text-center pb-4" v-if="userPosts.length == 0">
       <span>这里还什么都没有呢</span>
     </div>
@@ -66,7 +66,6 @@ import { deletePost, getList, newPost } from '@/api/post';
 import NormalButton from '@/components/common/button/NormalButton.vue';
 import { pageSize } from '@/config';
 import Pagination from '@/components/common/Pagination.vue';
-import router from '@/router';
 
 const store = useStore()
 const route = useRoute()
@@ -82,7 +81,6 @@ const currentPage = ref(1)
 const postCount = ref(0)
 
 const enableEditMode = computed(() => login.value && userId.value == String(store.uid))
-const pageCount = computed(() => Math.ceil(postCount.value / pageSize))
 
 watch(route, async (to, from) => {
   NProgress.start()
@@ -104,6 +102,7 @@ async function fetchData() {
     let res = await getList(currentPage.value, Number(userId.value))
     userPosts.value = res['posts']
     postCount.value = res['count']
+    document.title = userProfile.value?.nickname + '的主页 - 博客'
   } catch (err: any) {
     toast.error(err.message)
   }

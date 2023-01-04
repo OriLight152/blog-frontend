@@ -20,7 +20,6 @@ const { devMode } = toRefs(store)
 
 devMode.value = localStorage.getItem('devMode') == 'true'
 
-
 </script>
 
 <style>

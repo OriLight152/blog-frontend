@@ -128,6 +128,7 @@ onMounted(async () => {
   await countPostView(Number(pid))
   postData.value = (await getPost(Number(pid)))['post']
   commentData.value = (await getComment(Number(pid)))['comments']
+  document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - 博客'
   NProgress.done()
   if (navigate) {
     switch (navigate) {
