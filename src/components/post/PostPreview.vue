@@ -7,10 +7,6 @@
         <div class="flex flex-col">
           <div>
             <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
-            <template v-if="devMode">
-              <span class="ml-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ postData.user.uid }}</span>
-              <span class="ml-2 text-sm bg-green-300 px-1 py-0.5 rounded-md">pid:{{ postData.pid }}</span>
-            </template>
           </div>
           <div class="text-gray-500 flex items-center text-sm">
             <span>{{ formatTime(postData.createdAt) }}</span>
@@ -62,7 +58,7 @@ const props = defineProps<{
 const store = useStore()
 const toast = useToast()
 
-const { devMode, login, likeCache } = toRefs(store)
+const { login, likeCache } = toRefs(store)
 const likeStatus = ref(false)
 
 if (login.value) {
