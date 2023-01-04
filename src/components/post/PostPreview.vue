@@ -52,17 +52,56 @@ import { ref, toRefs } from 'vue';
 import IconLikeS from '../icon/IconLikeS.vue';
 import { useStore } from '@/store';
 import IconView from '../icon/IconView.vue';
+import { useToast } from 'vue-toastification';
+import { cancelLike, submitLike } from '@/api/post';
 
-defineProps<{
+const props = defineProps<{
   postData: PostData,
 }>()
 
 const store = useStore()
+const toast = useToast()
 
-const { devMode } = toRefs(store)
+const { devMode, login, likeCache } = toRefs(store)
 const likeStatus = ref(false)
 
+if (login.value) {
+  likeStatus.value = likeCache.value.POST.includes(props.postData.pid.toString())
+}
+
 function btnClickLike() {
-  likeStatus.value = !likeStatus.value
+  if (!login.value) {
+    toast.warning('请先登录')
+    return
+  }
+  if (!likeStatus.value) {
+    submitLike(store.token, 'POST', props.postData.pid)
+      .then((result) => {
+        likeStatus.value = !likeStatus.value
+        props.postData.like += 1
+      })
+      .catch((err) => {
+        likeStatus.value = !likeStatus.value
+        toast('点赞失败：' + err.message)
+      })
+      .finally(() => {
+        likeCache.value.POST.push(props.postData.pid.toString())
+      })
+  } else {
+    cancelLike(store.token, 'POST', props.postData.pid)
+      .then((result) => {
+        likeStatus.value = !likeStatus.value
+        props.postData.like -= 1
+      })
+      .catch((err) => {
+        toast('取消点赞失败：' + err.message)
+      })
+      .finally(() => {
+        let exist = likeCache.value.POST.indexOf(props.postData.pid.toString())
+        if (exist !== -1) {
+          likeCache.value.POST.splice(exist, 1)
+        }
+      })
+  }
 }
 </script>

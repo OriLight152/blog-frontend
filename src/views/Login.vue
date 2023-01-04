@@ -61,14 +61,6 @@
           <NormalButton @click="handleRegister">注册</NormalButton>
         </div>
       </template>
-      <div v-if="devMode">
-        <div>isRegister {{ isRegister }}</div>
-        <div>loginParams {{ loginParams }}</div>
-        <div>registerParams {{ registerParams }}</div>
-        <div>vaildUserId {{ vaildUserId }}</div>
-        <div>vaildEmail {{ vaildEmail }}</div>
-        <div>vaildUserPwd {{ vaildUserPwd }}</div>
-      </div>
     </div>
   </div>
 </template>
@@ -78,13 +70,12 @@ import { login, register } from '@/api/user';
 import NormalButton from '@/components/common/button/NormalButton.vue';
 import router from '@/router';
 import { useStore } from '@/store';
-import { computed, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const store = useStore()
 const toast = useToast()
 
-const { devMode } = toRefs(store)
 const reUserId = /^[a-z0-9-_]{5,15}$/
 const rePassword = /^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$/
 const reEmail = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
@@ -120,6 +111,7 @@ async function handleLogin() {
       store.login = true
       store.uid = result['id']
       store.token = result['token']
+      store.likeCache = { "POST": [], "COMMENT": [] }
       localStorage.setItem('uid', result['id'])
       localStorage.setItem('token', result['token'])
       router.push('/profile')

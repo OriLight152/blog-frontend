@@ -10,12 +10,6 @@
           <div class="flex flex-col">
             <div>
               <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
-              <span class="ml-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md" v-if="devMode">
-                uid:{{ postData.user.uid }}
-              </span>
-              <span class="ml-2 text-sm bg-green-300 px-1 py-0.5 rounded-md" v-if="devMode">
-                pid:{{ postData.pid }}
-              </span>
             </div>
             <div class="text-gray-500 flex items-center text-sm">
               <span>发布于 {{ formatTime(postData.createdAt) }}</span>
@@ -29,8 +23,18 @@
           </div>
         </div>
       </RouterLink>
+      <!-- 文章内容 -->
       <div class="p-8 pt-4">
         <div class="leading-relaxed rendered" v-html="marked.parse(replaceShortcode(postData.text))"></div>
+      </div>
+      <div class="flex justify-center py-6">
+        <button
+          class="w-16 h-16 border-2 flex flex-col items-center justify-center rounded-full border-gray-200 hover:bg-gray-200 transition-colors"
+          @click="handleLike">
+          <IconLikeS v-if="likeStatus" class="w-6 h-6 text-red-500" />
+          <IconLikeO v-else class="w-6 h-6 text-gray-500" />
+          <span class="leading-4">{{ postData.like }}</span>
+        </button>
       </div>
     </template>
   </div>
@@ -57,17 +61,8 @@
         <div class="ml-2 flex-1">
           <div>
             <span class="font-bold"> {{ comment.user.nickname }}</span>
-            <template v-if="postData?.author === comment.user.uid">
-              <span class="ml-1 text-sm bg-blue-300 px-1 py-0.5 rounded-md">文章作者</span>
-            </template>
-            <template v-if="devMode">
-              <span class="ml-1 text-sm bg-yellow-300 px-1 py-0.5 rounded-md" v-if="devMode">
-                uid:{{ comment.user.uid }}
-              </span>
-              <span class="ml-1 text-sm bg-red-300 px-1 py-0.5 rounded-md" v-if="devMode">
-                cid:{{ comment.cid }}
-              </span>
-            </template>
+            <span v-if="postData?.author === comment.user.uid"
+              class="ml-1 text-sm bg-blue-300 px-1 py-0.5 rounded-md">文章作者</span>
           </div>
           <template v-if="comment.replyTo">
             <CommentReply :comment="commentData.find((item) => item.cid === comment.replyTo)"
@@ -78,13 +73,6 @@
         </div>
       </div>
     </div>
-
-  </div>
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden px-4 pt-2 pb-4" v-if="devMode">
-    <h2>开发数据</h2>
-    <p>login: {{ login }}</p>
-    <p>postData: {{ postData }}</p>
-    <p>commentData: {{ commentData }}</p>
   </div>
 </template>
 
@@ -98,12 +86,13 @@ import hljs from 'highlight.js/lib/common'
 import NProgress from 'nprogress'
 import { useStore } from '@/store';
 import { useToast } from 'vue-toastification';
-import { countPostView, getComment, getPost, newComment } from '@/api/post';
+import { cancelLike, countPostView, getComment, getPost, newComment, submitLike } from '@/api/post';
 import NormalButton from '@/components/common/button/NormalButton.vue';
 import CommentReply from '@/components/post/CommentReply.vue';
 import IconView from '@/components/icon/IconView.vue';
 import IconComment from '@/components/icon/IconComment.vue';
 import IconLikeO from '@/components/icon/IconLikeO.vue';
+import IconLikeS from '@/components/icon/IconLikeS.vue';
 
 const store = useStore()
 const route = useRoute()
@@ -111,18 +100,31 @@ const toast = useToast()
 
 const { pid } = route.params
 const { navigate } = route.query
-const { login, devMode } = toRefs(store)
+const { login, likeCache } = toRefs(store)
 const postData = ref<PostDetailData>()
 const commentData = ref<CommentData[]>([])
 const newCommentContent = ref('')
 const replyTo = ref(0)
+const likeStatus = ref(false)
+
+if (login.value) {
+  likeStatus.value = likeCache.value.POST.includes(String(pid))
+}
+
+// 使用 marked 自定义渲染
+const rendererPost = new marked.Renderer()
+rendererPost.link = (href, title, text) =>
+  `<a href=${href} target="_blank" class="relative px-1 z-10 hover:text-white after:link hover:after:link-hover transition-colors">${text}</a>`
+rendererPost.blockquote = (quote) =>
+  `<blockquote class="pl-4 pr-2 py-2 border-l-4 border-gray-300 bg-gray-300/20">${quote}</blockquote>`
 
 marked.setOptions({
   highlight: function (code, lang) {
     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
     return hljs.highlight(code, { language }).value;
   },
-  langPrefix: 'hljs language-'
+  langPrefix: 'hljs language-',
+  renderer: rendererPost
 })
 
 onMounted(() => {
@@ -131,7 +133,11 @@ onMounted(() => {
       if (navigate) {
         switch (navigate) {
           case 'comments':
-            document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            // document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            window.scrollTo({
+              top: (document.getElementById('comment')?.getBoundingClientRect().top as number) - 65,
+              behavior: 'smooth'
+            });
             console.log('navigate to comments');
             break;
           default:
@@ -165,7 +171,43 @@ async function fetchData() {
     })
 }
 
-async function handleNewComment() {
+function handleLike() {
+  if (!login.value) {
+    toast.warning('请先登录')
+    return
+  }
+  if (!likeStatus.value) {
+    submitLike(store.token, 'POST', Number(pid))
+      .then((result) => {
+        likeStatus.value = !likeStatus.value
+        postData.value && (postData.value.like += 1)
+      })
+      .catch((err) => {
+        likeStatus.value = !likeStatus.value
+        toast('点赞失败：' + err.message)
+      })
+      .finally(() => {
+        likeCache.value.POST.push(String(pid))
+      })
+  } else {
+    cancelLike(store.token, 'POST', Number(pid))
+      .then((result) => {
+        likeStatus.value = !likeStatus.value
+        postData.value && (postData.value.like -= 1)
+      })
+      .catch((err) => {
+        toast('取消点赞失败：' + err.message)
+      })
+      .finally(() => {
+        let exist = likeCache.value.POST.indexOf(String(pid))
+        if (exist !== -1) {
+          likeCache.value.POST.splice(exist, 1)
+        }
+      })
+  }
+}
+
+function handleNewComment() {
   if (newCommentContent.value.trim() == '') {
     toast.warning('评论内容不可为空')
     return
@@ -203,10 +245,11 @@ function replaceShortcode(text: string) {
     .replaceAll('[/notice]', '</div>')
 }
 
-async function resetHeight(e: HTMLTextAreaElement) {
+function resetHeight(e: HTMLTextAreaElement) {
   e.style.height = '100px'
-  await nextTick();
-  e.style.height = e.scrollHeight + 'px'
+  nextTick(() => {
+    e.style.height = e.scrollHeight + 'px'
+  });
 }
 </script>
 
@@ -239,10 +282,6 @@ img {
 
 code.hljs {
   @apply rounded-xl leading-normal;
-}
-
-.rendered a {
-  @apply relative px-1 z-10 hover:text-white after:link hover:after:link-hover transition-colors;
 }
 
 .rendered>* {

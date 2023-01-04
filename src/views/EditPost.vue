@@ -11,9 +11,6 @@
         v-model="postData.text" @input="resetHeight($event.target as HTMLTextAreaElement)" ref="eleTextarea"></textarea>
       <NormalButton @click="handleSavePost">保存修改</NormalButton>
     </div>
-    <div v-if="devMode">
-      <div>postData: {{ postData }}</div>
-    </div>
   </div>
 
 </template>
@@ -33,7 +30,7 @@ const store = useStore()
 const route = useRoute()
 const toast = useToast()
 
-const { devMode, login, uid } = toRefs(store)
+const { login, uid } = toRefs(store)
 const pid = ref(String(route.params.pid))
 const postData = ref<PostDetailData | null>(null)
 const eleTextarea = ref<HTMLTextAreaElement | null>(null)

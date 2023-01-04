@@ -11,6 +11,13 @@ export function getList(page: number = 1, uid: number | null = null): any {
   })
 }
 
+export function getHotList() {
+  return request({
+    url: '/post/getHotList',
+    method: 'get',
+  })
+}
+
 export function getPost(pid: number): any {
   return request({
     url: '/post/getPost',
@@ -91,7 +98,7 @@ export function newComment(token: string, pid: number, text: string, agent: stri
   })
 }
 
-export function submitLike(token: string, type: string, sid: number): any {
+export function submitLike(token: string, type: string, sid: number) {
   return request({
     url: '/post/submitLike',
     method: 'post',
@@ -103,7 +110,7 @@ export function submitLike(token: string, type: string, sid: number): any {
   })
 }
 
-export function cancelLike(token: string, type: string, sid: number): any {
+export function cancelLike(token: string, type: string, sid: number) {
   return request({
     url: '/post/cancelLike',
     method: 'post',

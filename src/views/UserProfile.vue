@@ -41,14 +41,6 @@
       <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize"
         @change="handlePageChange" />
     </template>
-
-  </div>
-
-
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4" v-if="devMode">
-    <h2>开发数据</h2>
-    <p>userProfile: {{ userProfile }}</p>
-    <p>userPosts: {{ userPosts }}</p>
   </div>
 </template>
 
@@ -70,7 +62,7 @@ const store = useStore()
 const route = useRoute()
 const toast = useToast()
 
-const { devMode, login } = toRefs(store)
+const { login } = toRefs(store)
 const userId = ref(String(route.params.uid))
 const userProfile = ref<UserProfile | null>()
 const userPosts = ref<PostData[]>([])
@@ -102,7 +94,7 @@ async function fetchData() {
       userProfilePromise,
       userPostsPromise,
     ])
-    .then(([profile,posts]) => {
+    .then(([profile, posts]) => {
       userProfile.value = profile['userInfo']
       userPosts.value = posts['posts']
       postCount.value = posts['count']
@@ -151,6 +143,7 @@ async function handleDeletePost(pid: number) {
 function handleLogout() {
   localStorage.removeItem('uid')
   localStorage.removeItem('token')
+  localStorage.removeItem('likeCache')
   store.login = false
   store.uid = 0
   store.token = ''

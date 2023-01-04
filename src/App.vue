@@ -5,20 +5,24 @@
       <RouterView />
     </div>
     <Footer />
+    <ToolBar />
   </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs } from 'vue';
-import Footer from './components/Footer.vue';
+import { toRefs, watch } from 'vue';
 import Nav from './components/Nav.vue';
+import Footer from './components/Footer.vue';
 import { useStore } from './store';
+import ToolBar from './components/ToolBar.vue';
 
 const store = useStore()
 
-const { devMode } = toRefs(store)
+const { likeCache } = toRefs(store)
 
-devMode.value = localStorage.getItem('devMode') == 'true'
+watch(likeCache, (like) => {
+  localStorage.setItem('likeCache', JSON.stringify(like))
+}, { deep: true })
 
 </script>
 

@@ -24,16 +24,10 @@
       </svg>
     </button>
   </div>
-  <template v-if="devMode">
-    <div>currentPage: {{ currentPage }}</div>
-    <div>totalCount: {{ totalCount }}</div>
-    <div>pageCount: {{ pageCount }}</div>
-  </template>
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@/store';
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
   currentPage: number,
@@ -42,9 +36,7 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits(['change'])
-const store = useStore()
 
-const { devMode } = toRefs(store)
 const pageCount = computed(() => Math.ceil(props.totalCount / props.pageSize))
 
 function handleBtnPrev() {
