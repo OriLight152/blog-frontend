@@ -132,7 +132,7 @@ onMounted(async () => {
   if (navigate) {
     switch (navigate) {
       case 'comments':
-        document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth' })
+        document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
         console.log('navigate to comments');
         break;
       default:
