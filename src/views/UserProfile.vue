@@ -8,17 +8,16 @@
       <div class="text-center">加载中</div>
     </template>
     <template v-else>
-      <img class="rounded-full w-[150px] h-[150px] shadow-md" :src="userProfile?.avatar" alt="user avatar">
-      <div class="font-bold mt-4">{{ userProfile?.nickname }}</div>
-      <div class="text-gray-500">
-        @{{ userProfile?.name }}
-      </div>
-      <div class="mt-2">
-        <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
-        <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
+      <div class="flex flex-col w-full items-center">
+        <img class="rounded-full w-[120px] h-[120px] shadow-md" :src="userProfile?.avatar" alt="user avatar">
+        <span class="font-bold mt-4">{{ userProfile?.nickname }}</span>
+        <span class="text-gray-500">@{{ userProfile?.name }}</span>
+        <div class="mt-2">
+          <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
+          <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
+        </div>
       </div>
     </template>
-
   </div>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4" v-if="enableEditMode">
     <h2>新博文</h2>
@@ -89,24 +88,32 @@ watch(route, async (to, from) => {
   NProgress.done()
 })
 
-onMounted(async () => {
-  NProgress.start()
-  await fetchData()
-  NProgress.done()
+onMounted(() => {
+  fetchData()
 })
 
 // 获取数据
 async function fetchData() {
-  try {
-    userProfile.value = (await getInfo(Number(userId.value)))['userInfo']
-    let res = await getList(currentPage.value, Number(userId.value))
-    userPosts.value = res['posts']
-    postCount.value = res['count']
-    document.title = userProfile.value?.nickname + '的主页 - 博客'
-  } catch (err: any) {
-    toast.error(err.message)
-  }
-
+  NProgress.start()
+  const userProfilePromise = getInfo(Number(userId.value))
+  const userPostsPromise = getList(currentPage.value, Number(userId.value))
+  return Promise
+    .all([
+      userProfilePromise,
+      userPostsPromise,
+    ])
+    .then(([profile,posts]) => {
+      userProfile.value = profile['userInfo']
+      userPosts.value = posts['posts']
+      postCount.value = posts['count']
+      document.title = userProfile.value?.nickname + '的主页 - 博客'
+    })
+    .catch(err => {
+      toast.error(err.message)
+    })
+    .finally(() => {
+      NProgress.done()
+    })
 }
 
 async function handleNewPost() {

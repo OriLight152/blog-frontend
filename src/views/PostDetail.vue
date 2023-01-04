@@ -1,9 +1,12 @@
 <template>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden">
     <template v-if="postData">
+      <div class="px-8 pt-4">
+        <p class="text-3xl leading-[60px] font-bold">{{ postData.title }}</p>
+      </div>
       <RouterLink :to="'/user/' + postData.user.uid">
-        <div class="flex pt-6 px-4">
-          <img class="rounded-full w-16 h-16 mr-4" :src="postData.user.avatar" alt="avatar">
+        <div class="flex px-8 py-2 bg-gray-300/20">
+          <img class="rounded-full w-12 h-12 mr-4" :src="postData.user.avatar" alt="avatar">
           <div class="flex flex-col">
             <div>
               <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
@@ -14,9 +17,9 @@
                 pid:{{ postData.pid }}
               </span>
             </div>
-            <div class="text-gray-500">{{ formatTime(postData.createdAt) }}</div>
             <div class="text-gray-500 flex items-center text-sm">
-              <IconView class="w-4 h-4 inline-block mr-1" />
+              <span>发布于 {{ formatTime(postData.createdAt) }}</span>
+              <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
               <span>{{ postData.viewCount }}</span>
               <IconComment class="w-4 h-4 inline-block ml-2 mr-1" />
               <span>{{ commentData.length }}</span>
@@ -26,9 +29,8 @@
           </div>
         </div>
       </RouterLink>
-      <div class="p-8 pt-2">
-        <p class="text-2xl leading-[60px] font-bold">{{ postData.title }}</p>
-        <div v-html="marked.parse(postData.text)"></div>
+      <div class="p-8 pt-4">
+        <div class="leading-relaxed rendered" v-html="marked.parse(replaceShortcode(postData.text))"></div>
       </div>
     </template>
   </div>
@@ -123,24 +125,45 @@ marked.setOptions({
   langPrefix: 'hljs language-'
 })
 
-onMounted(async () => {
-  NProgress.start()
-  await countPostView(Number(pid))
-  postData.value = (await getPost(Number(pid)))['post']
-  commentData.value = (await getComment(Number(pid)))['comments']
-  document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - 博客'
-  NProgress.done()
-  if (navigate) {
-    switch (navigate) {
-      case 'comments':
-        document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        console.log('navigate to comments');
-        break;
-      default:
-        console.log('invalid navigate params');
-    }
-  }
+onMounted(() => {
+  fetchData()
+    .then(() => {
+      if (navigate) {
+        switch (navigate) {
+          case 'comments':
+            document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            console.log('navigate to comments');
+            break;
+          default:
+            console.log('invalid navigate params');
+        }
+      }
+    })
 })
+
+async function fetchData() {
+  NProgress.start()
+  const countPostViewPromise = countPostView(Number(pid))
+  const postDataPromise = getPost(Number(pid))
+  const commentDataPromise = getComment(Number(pid))
+  return Promise
+    .all([
+      countPostViewPromise,
+      postDataPromise,
+      commentDataPromise,
+    ])
+    .then(([count, post, comment]) => {
+      postData.value = post['post']
+      commentData.value = comment['comments']
+      document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - 博客'
+    })
+    .catch(err => {
+      toast.error(err.message)
+    })
+    .finally(() => {
+      NProgress.done()
+    })
+}
 
 async function handleNewComment() {
   if (newCommentContent.value.trim() == '') {
@@ -174,6 +197,12 @@ function handleToComment(cid: number) {
   document.getElementById('comment-' + cid)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
+function replaceShortcode(text: string) {
+  return marked.parse(text)
+    .replaceAll('[notice]', '<div class="bg-orange-200/20 border-l-4 border-orange-400 pl-4 pr-2 py-2 my-1">')
+    .replaceAll('[/notice]', '</div>')
+}
+
 async function resetHeight(e: HTMLTextAreaElement) {
   e.style.height = '100px'
   await nextTick();
@@ -182,11 +211,41 @@ async function resetHeight(e: HTMLTextAreaElement) {
 </script>
 
 <style>
+@tailwind utilities;
+
+@layer utilities {
+  .link {
+    display: block;
+    content: ' ';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background-color: rgb(86, 145, 255);
+    transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    z-index: -1;
+  }
+
+  .link-hover {
+    height: 100%;
+  }
+}
+
 img {
   @apply w-full rounded-xl;
 }
 
 code.hljs {
   @apply rounded-xl leading-normal;
+}
+
+.rendered a {
+  @apply relative px-1 z-10 hover:text-white after:link hover:after:link-hover transition-colors;
+}
+
+.rendered>* {
+  @apply my-2;
 }
 </style>
