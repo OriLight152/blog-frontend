@@ -4,25 +4,25 @@
       <div class="px-8 pt-4">
         <p class="text-3xl leading-[60px] font-bold">{{ postData.title }}</p>
       </div>
-      <RouterLink :to="'/user/' + postData.user.uid">
-        <div class="flex px-8 py-2 bg-gray-300/20">
+      <div class="flex px-8 py-2 bg-gray-300/20">
+        <RouterLink :to="'/user/' + postData.user.uid">
           <img class="rounded-full w-12 h-12 mr-4" :src="postData.user.avatar" alt="avatar">
-          <div class="flex flex-col">
-            <div>
-              <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
-            </div>
-            <div class="text-gray-500 flex items-center text-sm">
-              <span>发布于 {{ formatTime(postData.createdAt) }}</span>
-              <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
-              <span>{{ postData.viewCount }}</span>
-              <IconComment class="w-4 h-4 inline-block ml-2 mr-1" />
-              <span>{{ commentData.length }}</span>
-              <IconLikeO class="w-4 h-4 inline-block ml-2 mr-1" />
-              <span>{{ postData.like }}</span>
-            </div>
+        </RouterLink>
+        <div class="flex flex-col">
+          <RouterLink :to="'/user/' + postData.user.uid">
+            <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
+          </RouterLink>
+          <div class="text-gray-500 flex items-center text-sm">
+            <span>发布于 {{ formatTime(postData.createdAt) }}</span>
+            <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
+            <span>{{ postData.viewCount }}</span>
+            <IconComment class="w-4 h-4 inline-block ml-2 mr-1" />
+            <span>{{ commentData.length }}</span>
+            <IconLikeO class="w-4 h-4 inline-block ml-2 mr-1" />
+            <span>{{ postData.like }}</span>
           </div>
         </div>
-      </RouterLink>
+      </div>
       <!-- 文章内容 -->
       <div class="p-8 pt-4">
         <div class="leading-relaxed rendered" v-html="marked.parse(replaceShortcode(postData.text))"></div>
@@ -44,18 +44,23 @@
       <div class="mb-2" v-if="replyTo !== 0">
         回复 {{ commentData.find((item) => item.cid === replyTo)?.user.nickname }}
       </div>
-      <textarea class="w-full p-2 rounded-md border resize-none" v-model="newCommentContent" placeholder="发一条友善的评论"
+      <textarea class="w-full p-2 rounded-md border resize-none" v-model="newCommentContent"
+        :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!allowComment"
         @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
-      <NormalButton @click="handleNewComment">{{ replyTo === 0 ? '发布' : '回复' }}</NormalButton>
-      <NormalButton class="ml-2" v-if="replyTo !== 0" @click="replyTo = 0">取消回复</NormalButton>
+      <NormalButton class="mr-2" @click="handleNewComment" v-if="allowComment">{{ replyTo === 0 ? '发布' : '回复' }}
+      </NormalButton>
+      <NormalButton class="mr-2" v-if="replyTo !== 0" @click="replyTo = 0">取消回复</NormalButton>
     </div>
     <p class="text-center" v-if="commentData.length === 0">暂无评论</p>
-    <p class="text-center mb-4" v-if="!login">登录后才可发布评论 <RouterLink to="/login" class="text-blue-800">去登录</RouterLink>
+    <p class="text-center mb-4" v-if="!login && allowComment">登录后才可发布评论 <RouterLink to="/login" class="text-blue-800">
+        去登录</RouterLink>
     </p>
     <div class="mt-4 p-1">
       <div class="my-2 flex" v-for="comment in commentData" :id="'comment-' + comment.cid">
         <div class="shrink-0">
-          <img class="w-12 h-12 rounded-full" :src="comment.user.avatar">
+          <RouterLink :to="'/user/' + comment.user.uid">
+            <img class="w-12 h-12 rounded-full" :src="comment.user.avatar">
+          </RouterLink>
           <button class="w-12 text-center text-sm" v-if="login" @click="replyTo = comment.cid">回复</button>
         </div>
         <div class="ml-2 flex-1">
@@ -77,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, toRefs, nextTick } from 'vue';
+import { onMounted, ref, toRefs, nextTick, computed } from 'vue';
 import { CommentData, PostDetailData } from '@/core/types';
 import { useRoute } from 'vue-router';
 import { formatTime } from '@/utils';
@@ -106,6 +111,8 @@ const commentData = ref<CommentData[]>([])
 const newCommentContent = ref('')
 const replyTo = ref(0)
 const likeStatus = ref(false)
+
+const allowComment = computed(() => postData.value && postData.value.allowComment === 1)
 
 if (login.value) {
   likeStatus.value = likeCache.value.POST.includes(String(pid))
@@ -277,7 +284,7 @@ function resetHeight(e: HTMLTextAreaElement) {
 }
 
 img {
-  @apply w-full rounded-xl;
+  @apply max-w-full rounded-xl;
 }
 
 code.hljs {

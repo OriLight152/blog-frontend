@@ -15,6 +15,7 @@
         <div class="mt-2">
           <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
           <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
+          <span class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white" v-if="userProfile.status !== 0">用户已被封禁</span>
         </div>
       </div>
     </template>
