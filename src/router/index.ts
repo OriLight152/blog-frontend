@@ -27,12 +27,14 @@ router.beforeEach(async (to) => {
           store.uid = res['uid']
           store.token = token as string
           store.likeCache = JSON.parse(localStorage.getItem('likeCache') || '{"POST":[],"COMMENT":[]}')
+          console.debug('[router] user verify successful, uid:' + store.uid + '.')
         }
       } catch {
         localStorage.removeItem('uid')
         localStorage.removeItem('token')
         localStorage.removeItem('likeCache')
         useToast().warning('登录已过期，请重新登录')
+        console.debug('[router] user login expired.')
       }
 
     }
@@ -48,7 +50,7 @@ router.beforeEach(async (to) => {
     return '/user/' + store.uid
   }
   store.currentPage = to.name?.toString() || ''
-  console.log(to);
+  console.debug('[router] to ', to);
 })
 
 export default router

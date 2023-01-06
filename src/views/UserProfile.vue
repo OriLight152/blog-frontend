@@ -31,7 +31,7 @@
     <NormalButton @click="handleNewPost">发布</NormalButton>
   </div>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
-    <h2>{{ enableEditMode? '我的': '用户' }}博客</h2>
+    <h2>{{ enableEditMode? '我的': '用户' }}文章</h2>
     <div class="text-center pb-4" v-if="userPosts.length == 0">
       <span>这里还什么都没有呢</span>
     </div>

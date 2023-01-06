@@ -89,9 +89,11 @@ async function handleSavePost() {
   }
 }
 
-async function resetHeight(ele: HTMLTextAreaElement) {
+function resetHeight(ele: HTMLTextAreaElement) {
   ele.style.height = '100px'
-  await nextTick();
-  ele.style.height = ele.scrollHeight + 'px'
+  nextTick(()=>{
+    ele.style.height = ele.scrollHeight + 'px'
+
+  });
 }
 </script>
