@@ -35,9 +35,12 @@ const pid = ref(String(route.params.pid))
 const postData = ref<PostDetailData | null>(null)
 const eleTextarea = ref<HTMLTextAreaElement | null>(null)
 
-
-
 onMounted(async () => {
+  if (!login.value) {
+    toast.warning('请先登录')
+    router.push('/login')
+    return
+  }
   NProgress.start()
   await fetchData()
   NProgress.done()
@@ -50,14 +53,11 @@ watch(postData, async () => {
 })
 
 async function fetchData() {
+  store.pageLoading = true
   getPost(Number(pid.value))
     .then((result: any) => {
       postData.value = result['post']
-      if (!login.value) {
-        toast.warning('请先登录')
-        router.push('/login')
-        return
-      }
+      store.pageLoading = false
       if (uid.value !== postData.value?.author) {
         toast.warning('你没有权限编辑此文章'),
           router.push('/profile')
@@ -65,6 +65,7 @@ async function fetchData() {
       }
     })
     .catch((err: any) => {
+      store.pageLoading = false
     });
 }
 
@@ -91,9 +92,8 @@ async function handleSavePost() {
 
 function resetHeight(ele: HTMLTextAreaElement) {
   ele.style.height = '100px'
-  nextTick(()=>{
+  nextTick(() => {
     ele.style.height = ele.scrollHeight + 'px'
-
   });
 }
 </script>

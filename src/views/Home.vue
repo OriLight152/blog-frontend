@@ -11,6 +11,9 @@ import NProgress from 'nprogress'
 import { getList } from '@/api/post';
 import Pagination from '@/components/common/Pagination.vue';
 import { pageSize } from '@/config';
+import { useStore } from '@/store';
+
+const store = useStore()
 
 const posts = ref<PostData[]>([])
 const currentPage = ref(1)
@@ -22,6 +25,8 @@ onMounted(() => {
 
 function fetchData() {
   NProgress.start()
+  store.pageLoading = true
+  posts.value = []
   getList(currentPage.value)
     .then((res: any) => {
       posts.value = res['posts']
@@ -29,6 +34,7 @@ function fetchData() {
     })
     .finally(() => {
       NProgress.done()
+      store.pageLoading = false
     })
 }
 

@@ -1,21 +1,21 @@
 <template>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm">
-    <RouterLink :to="'/user/' + postData.user.uid">
-      <div class="flex pt-6 px-4">
+    <div class="flex pt-6 px-4">
+      <RouterLink :to="'/user/' + postData.user.uid">
         <img class="rounded-full w-16 h-16 mr-4 hover:scale-[1.1] transition-transform" :src="postData.user.avatar"
           alt="avatar">
-        <div class="flex flex-col">
-          <div>
-            <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
-          </div>
-          <div class="text-gray-500 flex items-center text-sm">
-            <span>{{ formatTime(postData.createdAt) }}</span>
-            <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
-            <span>{{ postData.viewCount }}</span>
-          </div>
+      </RouterLink>
+      <div class="flex flex-col">
+        <RouterLink :to="'/user/' + postData.user.uid">
+          <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
+        </RouterLink>
+        <div class="text-gray-500 flex items-center text-sm">
+          <span>{{ formatTime(postData.createdAt) }}</span>
+          <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
+          <span>{{ postData.viewCount }}</span>
         </div>
       </div>
-    </RouterLink>
+    </div>
     <RouterLink :to="'/post/' + postData.pid">
       <div class="ml-[80px] pl-4 pr-8">
         <p class="text-2xl leading-[60px]">{{ postData.title }}</p>

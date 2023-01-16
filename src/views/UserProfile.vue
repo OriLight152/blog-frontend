@@ -88,6 +88,7 @@ onMounted(() => {
 // 获取数据
 async function fetchData() {
   NProgress.start()
+  store.pageLoading = true
   const userProfilePromise = getInfo(Number(userId.value))
   const userPostsPromise = getList(currentPage.value, Number(userId.value))
   return Promise
@@ -106,6 +107,7 @@ async function fetchData() {
     })
     .finally(() => {
       NProgress.done()
+      store.pageLoading = false
     })
 }
 

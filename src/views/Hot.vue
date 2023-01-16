@@ -1,6 +1,6 @@
 <template>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm">
-    <div class="px-4 pt-2 pb-5">
+    <div class="px-4 pt-2 pb-5 bg-red-200/50">
       <h2>🔥热门文章</h2>
       <p>浏览量最多的20篇文章</p>
     </div>
@@ -13,6 +13,9 @@ import { onMounted, ref } from 'vue';
 import NProgress from 'nprogress'
 import { getHotList } from '@/api/post';
 import PostPreview from '@/components/post/PostPreview.vue';
+import { useStore } from '@/store';
+
+const store = useStore()
 
 const posts = ref<PostData[]>([])
 
@@ -22,12 +25,14 @@ onMounted(() => {
 
 function fetchData() {
   NProgress.start()
+  store.pageLoading = true
   getHotList()
     .then((res: any) => {
       posts.value = res['posts']
     })
     .finally(() => {
       NProgress.done()
+      store.pageLoading = false
     })
 }
 

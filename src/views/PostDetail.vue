@@ -40,19 +40,20 @@
   </div>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden px-4 pt-2 pb-8" id="comment">
     <h2>评论区</h2>
-    <div v-if="login">
+    <div>
       <div class="mb-2" v-if="replyTo !== 0">
         回复 {{ commentData.find((item) => item.cid === replyTo)?.user.nickname }}
       </div>
       <textarea class="w-full p-2 rounded-md border resize-none" v-model="newCommentContent"
         :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!allowComment"
         @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
-      <NormalButton class="mr-2" @click="handleNewComment" v-if="allowComment">{{ replyTo === 0 ? '发布' : '回复' }}
+      <NormalButton class="mr-2" @click="handleNewComment" v-if="login && allowComment">{{ replyTo === 0 ? '发布' : '回复'
+      }}
       </NormalButton>
       <NormalButton class="mr-2" v-if="replyTo !== 0" @click="replyTo = 0">取消回复</NormalButton>
     </div>
     <p class="text-center" v-if="commentData.length === 0">暂无评论</p>
-    <p class="text-center mb-4" v-if="!login && allowComment">登录后才可发布评论 <RouterLink to="/login" class="text-blue-800">
+    <p class="text-center mb-4" v-if="!login">登录后才可发表评论 <RouterLink to="/login" class="text-blue-800">
         去登录</RouterLink>
     </p>
     <div class="mt-4 p-1">
@@ -61,7 +62,8 @@
           <RouterLink :to="'/user/' + comment.user.uid">
             <img class="w-12 h-12 rounded-full" :src="comment.user.avatar">
           </RouterLink>
-          <button class="w-12 text-center text-sm" v-if="login" @click="replyTo = comment.cid">回复</button>
+          <button class="w-12 text-center text-sm" v-if="login && allowComment"
+            @click="replyTo = comment.cid">回复</button>
         </div>
         <div class="ml-2 flex-1">
           <div>
@@ -156,6 +158,7 @@ onMounted(() => {
 
 async function fetchData() {
   NProgress.start()
+  store.pageLoading = true
   const countPostViewPromise = countPostView(Number(pid))
   const postDataPromise = getPost(Number(pid))
   const commentDataPromise = getComment(Number(pid))
@@ -175,6 +178,7 @@ async function fetchData() {
     })
     .finally(() => {
       NProgress.done()
+      store.pageLoading = false
     })
 }
 

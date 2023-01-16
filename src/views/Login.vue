@@ -6,13 +6,13 @@
         <div class="border rounded-md mt-10">
           <div class="flex items-center pl-3 border-b">
             <span class="w-[50px]">用户名</span>
-            <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入用户名"
-              v-model="loginParams.username">
+            <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入用户名" maxlength="12"
+              v-model="loginParams.username" v-focus>
           </div>
           <div class="flex items-center pl-3">
             <span class="w-[50px]">密码</span>
-            <input class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码"
-              v-model="loginParams.password">
+            <input class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码" maxlength="36"
+              v-model="loginParams.password" @keydown.enter="handleLogin">
           </div>
         </div>
         <div class="flex justify-center mt-10">
@@ -23,25 +23,37 @@
       <template v-else>
         <h1 class="text-center">用户注册</h1>
         <div class="border rounded-md mt-10">
-          <div class="flex items-center pl-3 border-b">
-            <span class="w-[50px]">用户名</span>
-            <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入用户名"
-              v-model="registerParams.username">
+          <div class="px-3 border-b">
+            <div class="flex items-center">
+              <span class="w-[50px] shrink-0">用户名</span>
+              <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入用户名"
+                v-model="registerParams.username">
+            </div>
+            <div class="text-center text-red-500 pb-1" v-show="!vaildUsername">用户名由小写字母、数字、下划线组成，长度5-12字符</div>
           </div>
-          <div class="flex items-center pl-3 border-b">
-            <span class="w-[50px]">昵称</span>
-            <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入昵称"
-              v-model="registerParams.nickname">
+          <div class="px-3 border-b">
+            <div class="flex items-center">
+              <span class="w-[50px] shrink-0">昵称</span>
+              <input class="flex-1 h-[40px] px-3 outline-none" type="text" placeholder="请输入昵称"
+                v-model="registerParams.nickname">
+            </div>
+            <div class="text-center text-red-500 pb-1" v-show="!vaildNickname">昵称长度2-20字符</div>
           </div>
-          <div class="flex items-center pl-3 border-b">
-            <span class="w-[50px]">邮箱</span>
-            <input class="flex-1 h-[40px] px-3 outline-none" type="email" placeholder="请输入邮箱"
-              v-model="registerParams.email">
+          <div class="px-3 border-b">
+            <div class="flex items-center">
+              <span class="w-[50px] shrink-0">邮箱</span>
+              <input class="flex-1 h-[40px] px-3 outline-none" type="email" placeholder="请输入邮箱"
+                v-model="registerParams.email">
+            </div>
+            <div class="text-center text-red-500 pb-1" v-show="!vaildEmail">邮箱格式不正确</div>
           </div>
-          <div class="flex items-center pl-3">
-            <span class="w-[50px]">密码</span>
-            <input class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码"
-              v-model="registerParams.password">
+          <div class="px-3 border-b">
+            <div class="flex items-center">
+              <span class="w-[50px] shrink-0">密码</span>
+              <input class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码"
+                v-model="registerParams.password">
+            </div>
+            <div class="text-center text-red-500 pb-1" v-show="!vaildPassword">密码需要包含大写或小写字母和数字，长度6-30字符</div>
           </div>
         </div>
         <div class="pl-3 mt-2">
@@ -73,11 +85,15 @@ import { useStore } from '@/store';
 import { computed, ref } from 'vue';
 import { useToast } from 'vue-toastification';
 
+const vFocus = {
+  mounted: (el: HTMLElement) => el.focus()
+}
+
 const store = useStore()
 const toast = useToast()
 
-const reUserId = /^[a-z0-9-_]{5,15}$/
-const rePassword = /^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$/
+const reUserId = /^[a-z0-9-_]{5,12}$/
+const rePassword = /^(?=.*?[a-zA-Z])(?=.*?[0-9]).{6,30}$/
 const reEmail = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
 const isRegister = ref(false)
 const loginParams = ref({
@@ -92,9 +108,10 @@ const registerParams = ref({
   sex: 'MALE'
 })
 
-const vaildUserId = computed(() => reUserId.test(registerParams.value.username) || registerParams.value.username == '')
-const vaildUserPwd = computed(() => rePassword.test(registerParams.value.password) || registerParams.value.password == '')
-const vaildEmail = computed(() => reEmail.test(registerParams.value.email))
+const vaildUsername = computed(() => reUserId.test(registerParams.value.username) || registerParams.value.username == '')
+const vaildNickname = computed(() => registerParams.value.nickname.length >= 2 && registerParams.value.nickname.length <= 20 || registerParams.value.nickname == '')
+const vaildPassword = computed(() => rePassword.test(registerParams.value.password) || registerParams.value.password == '')
+const vaildEmail = computed(() => reEmail.test(registerParams.value.email) || registerParams.value.email == '')
 
 async function handleLogin() {
   if (loginParams.value.username.trim() === '') {
@@ -137,15 +154,19 @@ async function handleRegister() {
     toast.warning('密码不可为空')
     return
   }
-  if (!vaildUserId.value) {
+  if (!vaildUsername.value) {
     toast.warning('用户名格式错误')
+    return
+  }
+  if (!vaildNickname.value) {
+    toast.warning('昵称格式错误')
     return
   }
   if (!vaildEmail.value) {
     toast.warning('邮箱格式错误')
     return
   }
-  if (!vaildUserPwd.value) {
+  if (!vaildPassword.value) {
     toast.warning('密码格式错误')
     return
   }

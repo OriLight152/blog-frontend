@@ -9,6 +9,7 @@ export const useStore = defineStore('main', {
     likeCache: {
       POST: [] as string[],
       COMMENT: [] as string[]
-    }
+    },
+    pageLoading: false
   }),
 })
