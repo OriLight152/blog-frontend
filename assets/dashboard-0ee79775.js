@@ -1,0 +1,1 @@
+import{_ as e,c as t,g as o,k as s}from"./index-04964f10.js";const c={},a=s("p",{class:"mb-4 text-2xl font-bold"},"仪表盘",-1),n=[a];function r(_,d){return o(),t("div",null,n)}const f=e(c,[["render",r]]);export{f as default};

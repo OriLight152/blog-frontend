@@ -1,1 +1,0 @@
-import{_ as e,c as r,A as t,f as s}from"./index-f715197c.js";const n={},c={class:"border px-6 py-1 rounded-md hover:border-blue-500 transition-colors"};function a(o,d){return s(),r("button",c,[t(o.$slots,"default")])}const _=e(n,[["render",a]]);export{_ as N};
