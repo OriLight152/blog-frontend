@@ -1,15 +1,13 @@
 import { useStore } from "@/store";
-import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { useToast } from "vue-toastification";
 import routes from "./routes";
 import { verify } from "@/api/user";
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes
+  history: createWebHistory('/blog'),
+  routes,
 })
-const blockBeforeLogin = ['/profile']
-const blockAfterLogin = ['/login', '/register']
 
 router.beforeEach(async (to) => {
   const store = useStore()
@@ -26,8 +24,11 @@ router.beforeEach(async (to) => {
           store.login = true
           store.uid = res['uid']
           store.token = token as string
+          if (res['role'] == 'ADMIN') {
+            store.isAdmin = true
+          }
           store.likeCache = JSON.parse(localStorage.getItem('likeCache') || '{"POST":[],"COMMENT":[]}')
-          console.debug('[router] user verify successful, uid:' + store.uid + '.')
+          console.debug('[router] user verify successful, uid:' + res['uid'] + ', role:' + res['role'])
         }
       } catch {
         localStorage.removeItem('uid')
@@ -39,11 +40,18 @@ router.beforeEach(async (to) => {
 
     }
   }
-  if (blockBeforeLogin.includes(to.path) && !store.login) {
+  if (to.meta.requireLogin && !store.login){
     useToast().warning('请先登录')
+    console.log('req login');
     return '/login'
   }
-  if (blockAfterLogin.includes(to.path) && store.login) {
+  if (to.meta.requireAdmin && !store.isAdmin) {
+    useToast().warning('无访问权限')
+    console.log('req admin role');
+    return '/admin'
+  }
+  if (to.meta.blockAfterLogin && store.login) {
+    console.log('req no login');
     return '/home'
   }
   if (to.path == '/profile') {

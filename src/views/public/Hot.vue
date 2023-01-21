@@ -24,6 +24,7 @@ onMounted(() => {
 })
 
 function fetchData() {
+    // 获取热门文章数据
   NProgress.start()
   store.pageLoading = true
   getHotList()

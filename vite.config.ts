@@ -11,5 +11,5 @@ export default defineConfig({
       '@cp': path.resolve(__dirname, './src/components'),
     }
   },
-  base: './'
+  base: '/blog'
 })

@@ -15,9 +15,9 @@
               v-model="loginParams.password" @keydown.enter="handleLogin">
           </div>
         </div>
-        <div class="flex justify-center mt-10">
-          <NormalButton class="mr-2" @click="isRegister = true">前往注册</NormalButton>
-          <NormalButton @click="handleLogin">登录</NormalButton>
+        <div class="flex flex-col justify-center mt-10">
+          <NormalButton primary @click="handleLogin">登录</NormalButton>
+          <NormalButton class="mt-2" @click="isRegister = true">前往注册</NormalButton>
         </div>
       </template>
       <template v-else>
@@ -53,7 +53,7 @@
               <input class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码"
                 v-model="registerParams.password">
             </div>
-            <div class="text-center text-red-500 pb-1" v-show="!vaildPassword">密码需要包含大写或小写字母和数字，长度6-30字符</div>
+            <div class="text-center text-red-500 pb-1" v-show="!vaildPassword">密码需要包含 [大写或小写字母] 和 [数字] ，长度6-30字符</div>
           </div>
         </div>
         <div class="pl-3 mt-2">
@@ -68,9 +68,9 @@
               v-model="registerParams.sex">
             保密</label>
         </div>
-        <div class="flex justify-center mt-10">
-          <NormalButton class="mr-2" @click="isRegister = false">返回登录</NormalButton>
-          <NormalButton @click="handleRegister">注册</NormalButton>
+        <div class="flex flex-col justify-center mt-10">
+          <NormalButton primary @click="handleRegister">注册</NormalButton>
+          <NormalButton class="mt-2" @click="isRegister = false">返回登录</NormalButton>
         </div>
       </template>
     </div>

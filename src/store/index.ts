@@ -5,11 +5,13 @@ export const useStore = defineStore('main', {
     login: false,
     uid: 0,
     token: '',
+    isAdmin: false,
     currentPage: '',
     likeCache: {
       POST: [] as string[],
       COMMENT: [] as string[]
     },
-    pageLoading: false
+    pageLoading: false,
+    showSettingPanel: false
   }),
 })

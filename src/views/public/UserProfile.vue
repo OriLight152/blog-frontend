@@ -1,7 +1,8 @@
 <template>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
     <div class="absolute top-4 right-4" v-if="enableEditMode">
-      <NormalButton @click="handleLogout">退出登录</NormalButton>
+      <NormalButton @click="handleGoAdmin">进入后台</NormalButton>
+      <NormalButton class="ml-1" @click="handleLogout">退出登录</NormalButton>
     </div>
     <h2>{{ enableEditMode? '我的': '用户' }}信息</h2>
     <template v-if="!userProfile">
@@ -15,21 +16,14 @@
         <div class="mt-2">
           <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
           <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
-          <span class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white" v-if="userProfile.status !== 0">用户已被封禁</span>
+          <span class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white"
+            v-if="userProfile.status !== 0">用户已被封禁</span>
         </div>
       </div>
     </template>
   </div>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4" v-if="enableEditMode">
-    <h2>新博文</h2>
-    标题：
-    <input class="w-full p-2 rounded-md border hover:border-blue-500 transition-colors" v-model="newPostTitle"
-      placeholder="有什么新鲜事要向大家分享？" maxlength="30">
-    内容：
-    <textarea
-      class="w-full h-[100px] p-2 rounded-md border resize-none hover:border-blue-500 transition-colors overflow-y-hidden"
-      v-model="newPostContent" placeholder="" @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
-    <NormalButton @click="handleNewPost">发布</NormalButton>
+    <NewPost :data="newPostParams" @new-post="handleNewPost" />
   </div>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
     <h2>{{ enableEditMode? '我的': '用户' }}文章</h2>
@@ -46,39 +40,41 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, toRefs, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import NProgress from 'nprogress'
-import { PostData, UserProfile } from '@/core/types';
-import UserProfilePost from '@/components/post/UserProfilePost.vue';
+import { computed, onMounted, ref, toRefs, watch } from 'vue';
 import { useToast } from 'vue-toastification';
+import { useRoute, useRouter } from 'vue-router';
+import NProgress from 'nprogress'
+import { pageSize } from '@/config';
 import { useStore } from '@/store';
 import { getInfo } from '@/api/user';
+import { newPostData, PostData, UserProfile } from '@/core/types';
 import { deletePost, getList, newPost } from '@/api/post';
-import NormalButton from '@/components/common/button/NormalButton.vue';
-import { pageSize } from '@/config';
-import Pagination from '@/components/common/Pagination.vue';
+import NormalButton from '@cp/common/button/NormalButton.vue';
+import UserProfilePost from '@cp/post/UserProfilePost.vue';
+import Pagination from '@cp/common/Pagination.vue';
+import NewPost from '@cp/post/NewPost.vue';
 
 const store = useStore()
 const route = useRoute()
+const router = useRouter()
 const toast = useToast()
 
 const { login } = toRefs(store)
 const userId = ref(String(route.params.uid))
 const userProfile = ref<UserProfile | null>()
 const userPosts = ref<PostData[]>([])
-const newPostTitle = ref('')
-const newPostContent = ref('')
+const newPostParams = ref<newPostData>({ title: '', content: '' })
 const currentPage = ref(1)
 const postCount = ref(0)
 
 const enableEditMode = computed(() => login.value && userId.value == String(store.uid))
 
-watch(route, async (to, from) => {
-  NProgress.start()
-  userId.value = String(route.params.uid);
-  await fetchData()
-  NProgress.done()
+watch(route, (to, from) => {
+  if (to.params.uid) {
+    // to.params.uid 可能为 undefined
+    userId.value = String(to.params.uid);
+    fetchData()
+  }
 })
 
 onMounted(() => {
@@ -87,6 +83,7 @@ onMounted(() => {
 
 // 获取数据
 async function fetchData() {
+  // 获取用户数据
   NProgress.start()
   store.pageLoading = true
   const userProfilePromise = getInfo(Number(userId.value))
@@ -112,19 +109,20 @@ async function fetchData() {
 }
 
 async function handleNewPost() {
-  if (newPostTitle.value.trim() == '') {
+  // 发布文章
+  if (newPostParams.value.title.trim() == '') {
     toast.warning('文章标题不可为空')
     return
   }
-  if (newPostContent.value.trim() == '') {
+  if (newPostParams.value.content.trim() == '') {
     toast.warning('文章内容不可为空')
     return
   }
-  newPost(store.token, newPostTitle.value.trim(), newPostContent.value.trim())
+  newPost(store.token, newPostParams.value.title.trim(), newPostParams.value.content.trim())
     .then((result) => {
       toast.success('发布成功')
-      newPostTitle.value = ''
-      newPostContent.value = ''
+      newPostParams.value.title = ''
+      newPostParams.value.content = ''
       fetchData()
     })
     .catch((err) => {
@@ -133,17 +131,23 @@ async function handleNewPost() {
 }
 
 async function handleDeletePost(pid: number) {
+  // 删除文章
   deletePost(store.token, pid)
     .then((result) => {
       toast.success('删除成功')
       fetchData()
     })
     .catch((err) => {
-      toast.error('删除失败: ' + err)
+      toast.error('删除失败: ' + err.message)
     });
 }
 
+function handleGoAdmin() {
+  router.push('/admin')
+}
+
 function handleLogout() {
+  // 清除登录信息
   localStorage.removeItem('uid')
   localStorage.removeItem('token')
   localStorage.removeItem('likeCache')
@@ -153,13 +157,9 @@ function handleLogout() {
 }
 
 async function handlePageChange(page: number) {
+  // 切换文章
   currentPage.value = page
   await fetchData()
 }
 
-async function resetHeight(e: HTMLTextAreaElement) {
-  e.style.height = '100px'
-  await nextTick();
-  e.style.height = e.scrollHeight + 'px'
-}
 </script>

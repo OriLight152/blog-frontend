@@ -45,19 +45,20 @@
         回复 {{ commentData.find((item) => item.cid === replyTo)?.user.nickname }}
       </div>
       <textarea class="w-full p-2 rounded-md border resize-none" v-model="newCommentContent"
-        :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!allowComment"
+        :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!(allowComment && login)"
         @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
-      <NormalButton class="mr-2" @click="handleNewComment" v-if="login && allowComment">{{ replyTo === 0 ? '发布' : '回复'
+      <NormalButton class="mr-2" primary @click="handleNewComment" v-if="login && allowComment">{{ replyTo === 0 ? '发布'
+        : '回复'
       }}
       </NormalButton>
       <NormalButton class="mr-2" v-if="replyTo !== 0" @click="replyTo = 0">取消回复</NormalButton>
     </div>
-    <p class="text-center" v-if="commentData.length === 0">暂无评论</p>
     <p class="text-center mb-4" v-if="!login">登录后才可发表评论 <RouterLink to="/login" class="text-blue-800">
         去登录</RouterLink>
     </p>
+    <p class="text-center" v-if="commentData.length === 0">暂无评论</p>
     <div class="mt-4 p-1">
-      <div class="my-2 flex" v-for="comment in commentData" :id="'comment-' + comment.cid">
+      <div class="my-2 py-2 flex" v-for="comment in commentData" :id="'comment-' + comment.cid">
         <div class="shrink-0">
           <RouterLink :to="'/user/' + comment.user.uid">
             <img class="w-12 h-12 rounded-full" :src="comment.user.avatar">
@@ -157,6 +158,7 @@ onMounted(() => {
 })
 
 async function fetchData() {
+  // 获取文章数据
   NProgress.start()
   store.pageLoading = true
   const countPostViewPromise = countPostView(Number(pid))
@@ -183,6 +185,7 @@ async function fetchData() {
 }
 
 function handleLike() {
+  // 点赞
   if (!login.value) {
     toast.warning('请先登录')
     return
@@ -219,6 +222,7 @@ function handleLike() {
 }
 
 function handleNewComment() {
+  // 提交评论
   if (newCommentContent.value.trim() == '') {
     toast.warning('评论内容不可为空')
     return
@@ -247,7 +251,18 @@ function handleNewComment() {
 }
 
 function handleToComment(cid: number) {
-  document.getElementById('comment-' + cid)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  // 跳转到评论
+  let comment = document.getElementById('comment-' + cid)
+  if (comment) {
+    comment.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    setTimeout(() => {
+      comment?.classList.add('animate-twinkle')
+    }, 200)
+
+    setTimeout(() => {
+      comment?.classList.remove('animate-twinkle')
+    }, 2000)
+  }
 }
 
 function replaceShortcode(text: string) {

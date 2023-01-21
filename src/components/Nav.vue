@@ -12,9 +12,9 @@
             热门
           </button>
         </RouterLink>
-        <RouterLink class="flex-1 hover:text-gray-400" to="/profile">
+        <RouterLink class="flex-1 hover:text-gray-400" :to="login ? '/profile' : '/login'">
           <button class="w-full h-[60px]">
-            我的
+            {{ login?'我的': '登录' }}
           </button>
         </RouterLink>
       </div>
@@ -23,9 +23,9 @@
 </template>
 
 <script setup lang="ts">
+import { useStore } from '@/store';
+import { toRefs } from 'vue';
 
+const store = useStore()
+const { login } = toRefs(store)
 </script>
-
-<style scoped>
-
-</style>

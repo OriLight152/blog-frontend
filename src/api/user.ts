@@ -45,3 +45,13 @@ export function getInfo(uid: number): any {
     }
   })
 }
+
+export function edit(token: string, nickname: string | null = null, password: string | null = null): any {
+  return request({
+    url: '/user/edit',
+    method: 'post',
+    data: {
+      token, nickname, password
+    }
+  })
+}

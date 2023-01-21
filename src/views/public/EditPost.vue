@@ -9,7 +9,8 @@
       <textarea
         class="w-full h-[100px] p-2 rounded-md border resize-none hover:border-blue-500 transition-colors overflow-y-hidden"
         v-model="postData.text" @input="resetHeight($event.target as HTMLTextAreaElement)" ref="eleTextarea"></textarea>
-      <NormalButton @click="handleSavePost">保存修改</NormalButton>
+      <NormalButton primary @click="handleSavePost">保存修改</NormalButton>
+      <NormalButton @click="router.back()">取消</NormalButton>
     </div>
   </div>
 
@@ -53,6 +54,7 @@ watch(postData, async () => {
 })
 
 async function fetchData() {
+  // 获取文章数据
   store.pageLoading = true
   getPost(Number(pid.value))
     .then((result: any) => {
@@ -80,12 +82,12 @@ async function handleSavePost() {
   }
   if (postData.value) {
     editPost(store.token, postData.value.pid, postData.value.title.trim(), postData.value.text.trim())
-      .then(result => {
+      .then(res => {
         toast.success('保存成功')
-        router.push('/post/' + pid.value)
+        router.back()
       })
       .catch(err => {
-        toast.error('保存失败：' + err)
+        toast.error('保存失败：' + err.message)
       })
   }
 }
