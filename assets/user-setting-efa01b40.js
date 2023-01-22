@@ -1,1 +1,0 @@
-import{_ as e,c as t,h as c,k as s,g as o}from"./index-7fb9b2a6.js";const a={},n=s("p",{class:"mb-4 text-2xl font-bold"},"用户设置",-1);function r(_,l){return o(),t("div",null,[n,c(" 暂无设置项 ")])}const f=e(a,[["render",r]]);export{f as default};
