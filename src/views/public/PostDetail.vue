@@ -94,7 +94,7 @@ import hljs from 'highlight.js/lib/common'
 import NProgress from 'nprogress'
 import { useStore } from '@/store';
 import { useToast } from 'vue-toastification';
-import { cancelLike, countPostView, getComment, getPost, newComment, submitLike } from '@/api/post';
+import { cancelLike, getComment, getPost, newComment, submitLike } from '@/api/post';
 import NormalButton from '@/components/common/button/NormalButton.vue';
 import CommentReply from '@/components/post/CommentReply.vue';
 import IconView from '@/components/icon/IconView.vue';
@@ -161,16 +161,14 @@ async function fetchData() {
   // 获取文章数据
   NProgress.start()
   store.pageLoading = true
-  const countPostViewPromise = countPostView(Number(pid))
   const postDataPromise = getPost(Number(pid))
   const commentDataPromise = getComment(Number(pid))
   return Promise
     .all([
-      countPostViewPromise,
       postDataPromise,
       commentDataPromise,
     ])
-    .then(([count, post, comment]) => {
+    .then(([post, comment]) => {
       postData.value = post['post']
       commentData.value = comment['comments']
       document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - 博客'

@@ -64,16 +64,6 @@ export function deletePost(token: string, pid: number) {
   })
 }
 
-export function countPostView(pid: number) {
-  return request({
-    url: '/post/countPostView',
-    method: 'get',
-    params: {
-      pid
-    }
-  })
-}
-
 export function getComment(pid: number): any {
   return request({
     url: '/post/getComment',

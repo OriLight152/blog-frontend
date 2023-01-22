@@ -35,7 +35,7 @@
         <td>{{ post.like }}</td>
         <td>{{ post._count.comments }}</td>
         <td>{{ post.viewCount }}</td>
-        <td>{{ post.allowComment ? '是' : '否' }}</td>
+        <td :class="post.allowComment ? '' : 'text-red-500'">{{ post.allowComment ? '是' : '否' }}</td>
         <td>
           <NormalButton @click="handleAllowPostComment(post.pid, post.allowComment)">{{
             post.allowComment ? '禁止评论' :
@@ -89,7 +89,7 @@ function fetchData() {
 }
 
 function handleAllowPostComment(pid: number, curStatus: number) {
-  if (curStatus === 0) {
+  if (curStatus === 1) {
     prohibitPostComment(store.token, pid)
       .then((res: any) => {
         toast.success('禁止评论成功：')
