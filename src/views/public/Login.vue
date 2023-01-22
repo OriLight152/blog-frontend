@@ -123,14 +123,17 @@ async function handleLogin() {
     return
   }
   login(loginParams.value.username.trim(), loginParams.value.password.trim())
-    .then((result: any) => {
+    .then((res: any) => {
       toast.success('登录成功')
       store.login = true
-      store.uid = result['id']
-      store.token = result['token']
+      store.uid = res['id']
+      store.token = res['token']
+      if (res['role'] === 'ADMIN') {
+        store.isAdmin = true
+      }
       store.likeCache = { "POST": [], "COMMENT": [] }
-      localStorage.setItem('uid', result['id'])
-      localStorage.setItem('token', result['token'])
+      localStorage.setItem('uid', res['id'])
+      localStorage.setItem('token', res['token'])
       router.push('/profile')
     })
     .catch((err: any) => {
@@ -182,7 +185,3 @@ async function handleRegister() {
 
 
 </script>
-
-<style scoped>
-
-</style>

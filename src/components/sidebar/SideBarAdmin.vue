@@ -97,4 +97,4 @@ function handlePageSwitch(name: string, to: string) {
   }
   router.push('/admin' + to)
 }
-</script>1
+</script>

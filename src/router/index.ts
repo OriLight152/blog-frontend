@@ -24,7 +24,7 @@ router.beforeEach(async (to) => {
           store.login = true
           store.uid = res['uid']
           store.token = token as string
-          if (res['role'] == 'ADMIN') {
+          if (res['role'] === 'ADMIN') {
             store.isAdmin = true
           }
           store.likeCache = JSON.parse(localStorage.getItem('likeCache') || '{"POST":[],"COMMENT":[]}')
