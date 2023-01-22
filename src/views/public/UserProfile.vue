@@ -60,6 +60,7 @@ const router = useRouter()
 const toast = useToast()
 
 const { login } = toRefs(store)
+const { params } = toRefs(route)
 const userId = ref(String(route.params.uid))
 const userProfile = ref<UserProfile | null>()
 const userPosts = ref<PostData[]>([])
@@ -69,10 +70,10 @@ const postCount = ref(0)
 
 const enableEditMode = computed(() => login.value && userId.value == String(store.uid))
 
-watch(route, (to, from) => {
-  if (to.params.uid) {
+watch(params, (to, from) => {
+  if (to.uid) {
     // to.params.uid 可能为 undefined
-    userId.value = String(to.params.uid);
+    userId.value = String(to.uid);
     fetchData()
   }
 })

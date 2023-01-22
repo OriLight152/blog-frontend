@@ -99,13 +99,12 @@ export function prohibitPostComment(token: string, pid: number): any {
   })
 }
 
-export function getCommentList(token: string, pid: number = 0, page: number = 1): any {
+export function getCommentList(token: string, page: number = 1): any {
   return request({
     url: '/admin/getCommentList',
     method: 'post',
     data: {
       token,
-      pid,
       page
     }
   })

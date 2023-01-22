@@ -1,8 +1,8 @@
 <template>
   <div>
     <p class="mb-4 text-2xl font-bold">评论管理</p>
-    <p>评论总数：{{ postCount }}</p>
-    <p>当前页：{{ currentPage }} , 总页数：{{ Math.ceil(postCount / pageSize) }}</p>
+    <p>评论总数：{{ commentCount }}</p>
+    <p>当前页：{{ currentPage }} , 总页数：{{ Math.ceil(commentCount / pageSize) }}</p>
     <table class="w-full table-fixed text-center">
       <colgroup>
         <col width="10">
@@ -46,7 +46,7 @@
         </td>
       </tr>
     </table>
-    <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
+    <Pagination :current-page="currentPage" :total-count="commentCount" :page-size="pageSize" @change="handlePageChange" />
   </div>
 </template>
 
@@ -67,7 +67,7 @@ const toast = useToast()
 
 const commentList = ref<AdminCommentData[]>([])
 const currentPage = ref(1)
-const postCount = ref(0)
+const commentCount = ref(0)
 
 const commentStatusEnum: {
   [key: number]: string
@@ -86,7 +86,7 @@ function fetchData() {
   getCommentList(store.token, currentPage.value)
     .then((res: any) => {
       commentList.value = res['comments']
-      postCount.value = res['count']
+      commentCount.value = res['count']
     })
     .catch((err: any) => {
       toast.error(err.message)

@@ -3,11 +3,18 @@
     <p class="mb-4 text-2xl font-bold">个人资料</p>
     <div class="my-2">
       <h3>修改昵称</h3>
-      <input class="px-2 py-1 w-[300px] rounded-md border hover:border-blue-500 transition-colors" type="text" v-model="newNickname">
+      <input class="px-2 py-1 w-[300px] rounded-md border hover:border-blue-500 transition-colors" type="text"
+        v-model="newNickname">
     </div>
     <div class="my-2">
       <h3>修改密码</h3>
-      <input class="px-2 py-1 w-[300px] rounded-md border hover:border-blue-500 transition-colors" type="password" v-model="newPassword" placeholder="留空则不修改">
+      <input class="px-2 py-1 w-[300px] rounded-md border hover:border-blue-500 transition-colors" type="password"
+        v-model="newPassword" placeholder="留空则不修改">
+    </div>
+    <div class="my-2">
+      <h3>修改头像</h3>
+      <input class="px-2 py-1 w-[300px] rounded-md border hover:border-blue-500 transition-colors" type="text"
+        v-model="newAvatar" placeholder="留空则不修改">
     </div>
     <NormalButton primary @click="handleEditProfile">保存</NormalButton>
   </div>
@@ -32,6 +39,7 @@ const vaildPassword = computed(() => rePassword.test(newPassword.value) || newPa
 
 const newNickname = ref('加载中')
 const newPassword = ref('')
+const newAvatar = ref('加载中')
 
 onMounted(() => {
   fetchData()
@@ -43,6 +51,7 @@ async function fetchData() {
     .then((result: any) => {
       userProfile.value = result['userInfo'] as UserProfile
       newNickname.value = userProfile.value.nickname
+      newAvatar.value = userProfile.value.avatar
     })
     .catch((err: any) => {
       toast.error(err.message)
@@ -62,17 +71,7 @@ function handleEditProfile() {
     toast.warning('昵称格式错误')
     return
   }
-  if (newPassword.value.trim() == '') {
-    promise = edit(store.token, newNickname.value)
-  } else {
-    if (!vaildPassword.value) {
-      toast.warning('密码格式错误')
-      return
-    } else {
-      promise = edit(store.token, newNickname.value.trim(), newPassword.value.trim())
-    }
-  }
-  promise
+  edit(store.token, newNickname.value.trim(), newPassword.value.trim(), newAvatar.value.trim())
     .then((result: any) => {
       userProfile.value = result['userInfo']
       newPassword.value = ''

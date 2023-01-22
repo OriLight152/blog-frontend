@@ -1,12 +1,8 @@
 <template>
   <div class="w-full flex flex-col items-center py-4">
-    <div>
+    <RouterLink to="/post/35">
       大作业报告
-    </div>
-    <div>© 2022 OriLight</div>
+    </RouterLink>
+    <div>Copyright © 2022-2023 <a href="https://github.com/OriLight152">OriLight</a></div>
   </div>
 </template>
-
-<script setup lang="ts">
-
-</script>

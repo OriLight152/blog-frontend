@@ -259,7 +259,7 @@ function handleToComment(cid: number) {
 
     setTimeout(() => {
       comment?.classList.remove('animate-twinkle')
-    }, 2000)
+    }, 2200)
   }
 }
 
