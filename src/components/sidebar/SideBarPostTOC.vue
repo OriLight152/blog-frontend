@@ -27,9 +27,12 @@ onMounted(() => {
 })
 
 function navToTitle(title: string) {
-  const ele = document.getElementById(title.replace(/(#{1,6})\s/g, '').toLowerCase().replace(/\.|,|\(|\)|\//g,'').replace(/\s/g,'-'))
+  const ele = document.getElementById(title.replace(/(#{1,6})\s/g, '').toLowerCase().replace(/\.|,|\(|\)|\//g, '').replace(/\s/g, '-'))
   if (ele) {
-    ele.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    window.scrollTo({
+      top: ele.offsetTop - 70,
+      behavior: 'smooth'
+    });
     setTimeout(() => {
       ele.classList.add('animate-twinkle')
     }, 200)

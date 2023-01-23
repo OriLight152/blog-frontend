@@ -154,7 +154,7 @@ onMounted(() => {
           case 'comments':
             // document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
             window.scrollTo({
-              top: (document.getElementById('comment')?.getBoundingClientRect().top as number) - 65,
+              top: (document.getElementById('comment')?.offsetTop as number) - 65,
               behavior: 'smooth'
             });
             break;
