@@ -79,6 +79,9 @@ watch(params, (to, from) => {
 })
 
 onMounted(() => {
+  if (route.query.page) {
+    currentPage.value = Number(route.query.page)
+  }
   fetchData()
 })
 
@@ -98,7 +101,7 @@ async function fetchData() {
       userProfile.value = profile['userInfo']
       userPosts.value = posts['posts']
       postCount.value = posts['count']
-      document.title = userProfile.value?.nickname + '的主页 - 博客'
+      document.title = userProfile.value?.nickname + '的主页 - Ori博客'
     })
     .catch(err => {
       toast.error(err.message)
@@ -157,10 +160,11 @@ function handleLogout() {
   store.token = ''
 }
 
-async function handlePageChange(page: number) {
+function handlePageChange(page: number) {
   // 切换文章
   currentPage.value = page
-  await fetchData()
+  router.push({ query: { page } })
+  fetchData()
 }
 
 </script>

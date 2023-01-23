@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="mb-4 text-2xl font-bold">文章管理</p>
+    <p class="mb-4 text-2xl font-bold">我的文章</p>
     <div class="text-center pb-4" v-if="postList.length === 0">
       <span>这里还什么都没有呢</span>
     </div>

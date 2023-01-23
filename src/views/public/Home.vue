@@ -1,5 +1,7 @@
 <template>
-  <RouterLink class="w-full text-center text-2xl font-bold block py-4 my-2 bg-white hover:bg-gray-200 transition-colors rounded-md shadow-sm" to="/post/35">
+  <RouterLink
+    class="w-full text-center text-2xl font-bold block py-4 my-2 bg-white hover:bg-gray-200 transition-colors rounded-md shadow-sm"
+    to="/post/35">
     点击前往作业报告
   </RouterLink>
   <PostPreview v-for="post in posts" :post-data="post" />
@@ -15,14 +17,20 @@ import { getList } from '@/api/post';
 import Pagination from '@/components/common/Pagination.vue';
 import { pageSize } from '@/config';
 import { useStore } from '@/store';
+import { useRoute, useRouter } from 'vue-router';
 
 const store = useStore()
+const route = useRoute()
+const router = useRouter()
 
 const posts = ref<PostData[]>([])
 const currentPage = ref(1)
 const postCount = ref(0)
 
 onMounted(() => {
+  if (route.query.page) {
+    currentPage.value = Number(route.query.page)
+  }
   fetchData()
 })
 
@@ -44,6 +52,7 @@ function fetchData() {
 
 function handlePageChange(page: number) {
   currentPage.value = page
+  router.push({ query: { page } })
   fetchData()
 }
 </script>

@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/profile',
     name: 'profile',
-    component: () => import('@/views/public/Home.vue'),
+    component: () => import('@/views/public/home.vue'),
     meta: {
       requireLogin: true
     }
@@ -28,6 +28,7 @@ const routes: RouteRecordRaw[] = [
         name: 'admin-home',
         component: () => import('@/views/admin/home.vue'),
         meta: {
+          title: '个人资料 - 管理后台',
           requireLogin: true
         }
       },
@@ -36,6 +37,7 @@ const routes: RouteRecordRaw[] = [
         name: 'mypost',
         component: () => import('@/views/admin/mypost.vue'),
         meta: {
+          title: '我的文章 - 管理后台',
           requireLogin: true
         }
       },
@@ -44,6 +46,7 @@ const routes: RouteRecordRaw[] = [
         name: 'user-setting',
         component: () => import('@/views/admin/user-setting.vue'),
         meta: {
+          title: '用户设置 - 管理后台',
           requireLogin: true
         }
       },
@@ -52,6 +55,7 @@ const routes: RouteRecordRaw[] = [
         name: 'dashboard',
         component: () => import('@/views/admin/dashboard.vue'),
         meta: {
+          title: '仪表盘 - 管理后台',
           requireAdmin: true
         }
       },
@@ -60,6 +64,7 @@ const routes: RouteRecordRaw[] = [
         name: 'user-manage',
         component: () => import('@/views/admin/user-manage.vue'),
         meta: {
+          title: '用户管理 - 管理后台',
           requireAdmin: true
         }
       },
@@ -68,6 +73,7 @@ const routes: RouteRecordRaw[] = [
         name: 'post-manage',
         component: () => import('@/views/admin/post-manage.vue'),
         meta: {
+          title: '文章管理 - 管理后台',
           requireAdmin: true
         }
       },
@@ -76,6 +82,7 @@ const routes: RouteRecordRaw[] = [
         name: 'comment-manage',
         component: () => import('@/views/admin/comment-manage.vue'),
         meta: {
+          title: '评论管理 - 管理后台',
           requireAdmin: true
         }
       },
@@ -84,13 +91,17 @@ const routes: RouteRecordRaw[] = [
         name: 'system-setting',
         component: () => import('@/views/admin/system-setting.vue'),
         meta: {
+          title: '系统设置 - 管理后台',
           requireAdmin: true
         }
       },
       {
         path: 'about',
         name: 'about',
-        component: () => import('@/views/admin/about.vue')
+        component: () => import('@/views/admin/about.vue'),
+        meta:{
+          title: '关于'
+        }
       }]
   },
   {
@@ -99,7 +110,7 @@ const routes: RouteRecordRaw[] = [
     children: [{
       path: 'home',
       name: 'home',
-      component: () => import('@/views/public/Home.vue'),
+      component: () => import('@/views/public/home.vue'),
       meta: {
         title: '主页',
       }
@@ -107,7 +118,7 @@ const routes: RouteRecordRaw[] = [
     {
       path: 'hot',
       name: 'hot',
-      component: () => import('@/views/public/Hot.vue'),
+      component: () => import('@/views/public/hot.vue'),
       meta: {
         title: '热门'
       }
@@ -115,7 +126,7 @@ const routes: RouteRecordRaw[] = [
     {
       path: 'post/:pid',
       name: 'post',
-      component: () => import('@/views/public/PostDetail.vue'),
+      component: () => import('@/views/public/post-detail.vue'),
       meta: {
         title: '文章详情'
       }
@@ -123,7 +134,7 @@ const routes: RouteRecordRaw[] = [
     {
       path: 'post/edit/:pid',
       name: 'post-edit',
-      component: () => import('@/views/public/EditPost.vue'),
+      component: () => import('@/views/public/post-edit.vue'),
       meta: {
         title: '文章编辑',
         requireLogin: true
@@ -132,7 +143,7 @@ const routes: RouteRecordRaw[] = [
     {
       path: 'user/:uid',
       name: 'user-profile',
-      component: () => import('@/views/public/UserProfile.vue'),
+      component: () => import('@/views/public/user-profile.vue'),
       meta: {
         title: '用户主页'
       }
@@ -140,7 +151,7 @@ const routes: RouteRecordRaw[] = [
     {
       path: 'login',
       name: 'user-login',
-      component: () => import('@/views/public/Login.vue'),
+      component: () => import('@/views/public/login.vue'),
       meta: {
         title: '用户登录',
         blockAfterLogin: true

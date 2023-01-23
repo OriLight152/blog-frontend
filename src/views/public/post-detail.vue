@@ -157,10 +157,7 @@ onMounted(() => {
               top: (document.getElementById('comment')?.getBoundingClientRect().top as number) - 65,
               behavior: 'smooth'
             });
-            console.log('navigate to comments');
             break;
-          default:
-            console.log('invalid navigate params');
         }
       }
     })
@@ -180,7 +177,7 @@ async function fetchData() {
     .then(([post, comment]) => {
       postData.value = post['post']
       commentData.value = comment['comments']
-      document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - 博客'
+      document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - Ori博客'
     })
     .catch(err => {
       toast.error(err.message)
@@ -286,7 +283,7 @@ function resetHeight(e: HTMLTextAreaElement) {
 }
 </script>
 
-<style>
+<style lang="postcss">
 @tailwind utilities;
 
 @layer utilities {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>新博文</h2>
+    <h2>新文章</h2>
     标题：
     <input class="w-full p-2 rounded-md border hover:border-blue-500 transition-colors" v-model="data.title"
       placeholder="有什么新鲜事要向大家分享？" maxlength="30">

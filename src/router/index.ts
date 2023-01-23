@@ -12,7 +12,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const store = useStore()
   if (to.meta.title) {
-    document.title = to.meta.title as string + ' - 博客'
+    document.title = to.meta.title as string + ' - Ori博客'
   }
   if (!store.login) {
     let token = localStorage.getItem('token')
