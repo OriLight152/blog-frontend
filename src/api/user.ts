@@ -55,3 +55,13 @@ export function edit(token: string, nickname: string | null = null, password: st
     }
   })
 }
+
+export function getImageUploadToken(token: string): any {
+  return request({
+    url: '/user/getImageUploadToken',
+    method: 'post',
+    data: {
+      token
+    }
+  })
+}
