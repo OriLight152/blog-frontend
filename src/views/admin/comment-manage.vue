@@ -32,7 +32,11 @@
         </td>
         <td class="whitespace-nowrap">{{ comment.text }}</td>
         <td class="whitespace-nowrap">{{ comment.user.nickname + '(' + comment.user.uid + ')' }}</td>
-        <td class="whitespace-nowrap">{{ comment.post.title + '(' + comment.post.pid + ')' }}</td>
+        <td class="whitespace-nowrap">
+          <RouterLink :to="'/post/' + comment.post.pid">
+            {{ comment.post.title + '(' + comment.post.pid + ')' }}
+          </RouterLink>
+        </td>
         <td>{{ comment.ip }}</td>
         <td>{{ comment.replyTo }}</td>
         <td :class="comment.status === 2 ? 'text-red-500' : ''">{{ commentStatusEnum[comment.status] }}</td>
@@ -46,7 +50,8 @@
         </td>
       </tr>
     </table>
-    <Pagination :current-page="currentPage" :total-count="commentCount" :page-size="pageSize" @change="handlePageChange" />
+    <Pagination :current-page="currentPage" :total-count="commentCount" :page-size="pageSize"
+      @change="handlePageChange" />
   </div>
 </template>
 

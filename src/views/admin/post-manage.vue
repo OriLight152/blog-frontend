@@ -30,7 +30,11 @@
             {{ post.pid }}
           </RouterLink>
         </td>
-        <td class="whitespace-nowrap">{{ post.title }}</td>
+        <td class="whitespace-nowrap">
+          <RouterLink :to="'/post/' + post.pid">
+            {{ post.title }}
+          </RouterLink>
+        </td>
         <td class="whitespace-nowrap">{{ post.user.nickname + '(' + post.user.uid + ')' }}</td>
         <td>{{ post.like }}</td>
         <td>{{ post._count.comments }}</td>
