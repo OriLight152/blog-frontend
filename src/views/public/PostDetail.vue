@@ -1,87 +1,95 @@
 <template>
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden">
-    <template v-if="postData">
-      <div class="px-8 pt-4">
-        <p class="text-3xl leading-[60px] font-bold">{{ postData.title }}</p>
+  <div class="w-full flex justify-center space-x-2">
+    <SideBarPostTOC :content="postData.text" v-if="postData" />
+    <div class="w-full">
+      <div class="w-full bg-white my-2 rounded-md overflow-hidden">
+        <template v-if="postData">
+          <div class="px-8 pt-4">
+            <p class="text-3xl leading-[60px] font-bold">{{ postData.title }}</p>
+          </div>
+          <div class="flex px-8 py-2 bg-gray-300/20">
+            <RouterLink :to="'/user/' + postData.user.uid">
+              <img class="rounded-full w-12 h-12 mr-4" :src="postData.user.avatar" alt="avatar">
+            </RouterLink>
+            <div class="flex flex-col">
+              <RouterLink :to="'/user/' + postData.user.uid">
+                <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
+              </RouterLink>
+              <div class="text-gray-500 flex items-center text-sm">
+                <span>发布于 {{ formatTime(postData.createdAt) }}</span>
+                <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
+                <span>{{ postData.viewCount }}</span>
+                <IconComment class="w-4 h-4 inline-block ml-2 mr-1" />
+                <span>{{ commentData.length }}</span>
+                <IconLikeO class="w-4 h-4 inline-block ml-2 mr-1" />
+                <span>{{ postData.like }}</span>
+              </div>
+            </div>
+          </div>
+          <!-- 文章内容 -->
+          <div class="p-8 pt-4">
+            <div class="leading-relaxed rendered" v-html="marked.parse(replaceShortcode(postData.text))"></div>
+          </div>
+          <div class="flex justify-center py-6">
+            <button
+              class="w-16 h-16 border-2 flex flex-col items-center justify-center rounded-full border-gray-200 hover:bg-gray-200 transition-colors"
+              @click="handleLike">
+              <IconLikeS v-if="likeStatus" class="w-6 h-6 text-red-500" />
+              <IconLikeO v-else class="w-6 h-6 text-gray-500" />
+              <span class="leading-4">{{ postData.like }}</span>
+            </button>
+          </div>
+        </template>
       </div>
-      <div class="flex px-8 py-2 bg-gray-300/20">
-        <RouterLink :to="'/user/' + postData.user.uid">
-          <img class="rounded-full w-12 h-12 mr-4" :src="postData.user.avatar" alt="avatar">
-        </RouterLink>
-        <div class="flex flex-col">
-          <RouterLink :to="'/user/' + postData.user.uid">
-            <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
-          </RouterLink>
-          <div class="text-gray-500 flex items-center text-sm">
-            <span>发布于 {{ formatTime(postData.createdAt) }}</span>
-            <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
-            <span>{{ postData.viewCount }}</span>
-            <IconComment class="w-4 h-4 inline-block ml-2 mr-1" />
-            <span>{{ commentData.length }}</span>
-            <IconLikeO class="w-4 h-4 inline-block ml-2 mr-1" />
-            <span>{{ postData.like }}</span>
+      <div class="w-full bg-white my-2 rounded-md overflow-hidden px-4 pt-2 pb-8" id="comment">
+        <h2>评论区</h2>
+        <div>
+          <div class="mb-2" v-if="replyTo !== 0">
+            回复 {{ commentData.find((item) => item.cid === replyTo)?.user.nickname }}
+          </div>
+          <textarea class="w-full p-2 rounded-md border resize-none" v-model="newCommentContent"
+            :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!(allowComment && login)"
+            @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
+          <NormalButton class="mr-2" primary @click="handleNewComment" v-if="login && allowComment">{{ replyTo === 0 ?
+            '发布'
+            : '回复'
+          }}
+          </NormalButton>
+          <NormalButton class="mr-2" v-if="replyTo !== 0" @click="replyTo = 0">取消回复</NormalButton>
+        </div>
+        <p class="text-center mb-4" v-if="!login">登录后才可发表评论 <RouterLink to="/login" class="text-blue-800">
+            去登录</RouterLink>
+        </p>
+        <p class="text-center" v-if="commentData.length === 0">暂无评论</p>
+        <div class="mt-4 p-1">
+          <div class="my-2 py-2 flex" v-for="comment in commentData" :id="'comment-' + comment.cid">
+            <div class="shrink-0">
+              <RouterLink :to="'/user/' + comment.user.uid">
+                <img class="w-12 h-12 rounded-full" :src="comment.user.avatar">
+              </RouterLink>
+              <button class="w-12 text-center text-sm" v-if="login && allowComment"
+                @click="replyTo = comment.cid">回复</button>
+            </div>
+            <div class="ml-2 flex-1">
+              <div>
+                <span class="font-bold"> {{ comment.user.nickname }}</span>
+                <span v-if="postData?.author === comment.user.uid"
+                  class="ml-1 text-sm bg-blue-300 px-1 py-0.5 rounded-md">文章作者</span>
+              </div>
+              <template v-if="comment.replyTo">
+                <CommentReply :comment="commentData.find((item) => item.cid === comment.replyTo)"
+                  @to-comment="handleToComment" @no-comment="toast.warning('评论不存在或已被屏蔽')" />
+              </template>
+              <div>{{ comment.text }}</div>
+              <div class="mt-2 text-sm text-gray-500">{{ formatTime(comment.createdAt) }}</div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- 文章内容 -->
-      <div class="p-8 pt-4">
-        <div class="leading-relaxed rendered" v-html="marked.parse(replaceShortcode(postData.text))"></div>
-      </div>
-      <div class="flex justify-center py-6">
-        <button
-          class="w-16 h-16 border-2 flex flex-col items-center justify-center rounded-full border-gray-200 hover:bg-gray-200 transition-colors"
-          @click="handleLike">
-          <IconLikeS v-if="likeStatus" class="w-6 h-6 text-red-500" />
-          <IconLikeO v-else class="w-6 h-6 text-gray-500" />
-          <span class="leading-4">{{ postData.like }}</span>
-        </button>
-      </div>
-    </template>
-  </div>
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden px-4 pt-2 pb-8" id="comment">
-    <h2>评论区</h2>
-    <div>
-      <div class="mb-2" v-if="replyTo !== 0">
-        回复 {{ commentData.find((item) => item.cid === replyTo)?.user.nickname }}
-      </div>
-      <textarea class="w-full p-2 rounded-md border resize-none" v-model="newCommentContent"
-        :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!(allowComment && login)"
-        @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
-      <NormalButton class="mr-2" primary @click="handleNewComment" v-if="login && allowComment">{{ replyTo === 0 ? '发布'
-        : '回复'
-      }}
-      </NormalButton>
-      <NormalButton class="mr-2" v-if="replyTo !== 0" @click="replyTo = 0">取消回复</NormalButton>
     </div>
-    <p class="text-center mb-4" v-if="!login">登录后才可发表评论 <RouterLink to="/login" class="text-blue-800">
-        去登录</RouterLink>
-    </p>
-    <p class="text-center" v-if="commentData.length === 0">暂无评论</p>
-    <div class="mt-4 p-1">
-      <div class="my-2 py-2 flex" v-for="comment in commentData" :id="'comment-' + comment.cid">
-        <div class="shrink-0">
-          <RouterLink :to="'/user/' + comment.user.uid">
-            <img class="w-12 h-12 rounded-full" :src="comment.user.avatar">
-          </RouterLink>
-          <button class="w-12 text-center text-sm" v-if="login && allowComment"
-            @click="replyTo = comment.cid">回复</button>
-        </div>
-        <div class="ml-2 flex-1">
-          <div>
-            <span class="font-bold"> {{ comment.user.nickname }}</span>
-            <span v-if="postData?.author === comment.user.uid"
-              class="ml-1 text-sm bg-blue-300 px-1 py-0.5 rounded-md">文章作者</span>
-          </div>
-          <template v-if="comment.replyTo">
-            <CommentReply :comment="commentData.find((item) => item.cid === comment.replyTo)"
-              @to-comment="handleToComment" @no-comment="toast.warning('评论不存在或已被屏蔽')" />
-          </template>
-          <div>{{ comment.text }}</div>
-          <div class="mt-2 text-sm text-gray-500">{{ formatTime(comment.createdAt) }}</div>
-        </div>
-      </div>
-    </div>
+
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -101,6 +109,7 @@ import IconView from '@/components/icon/IconView.vue';
 import IconComment from '@/components/icon/IconComment.vue';
 import IconLikeO from '@/components/icon/IconLikeO.vue';
 import IconLikeS from '@/components/icon/IconLikeS.vue';
+import SideBarPostTOC from '@/components/sidebar/SideBarPostTOC.vue';
 
 const store = useStore()
 const route = useRoute()

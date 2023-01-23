@@ -42,16 +42,13 @@ router.beforeEach(async (to) => {
   }
   if (to.meta.requireLogin && !store.login){
     useToast().warning('请先登录')
-    console.log('req login');
     return '/login'
   }
   if (to.meta.requireAdmin && !store.isAdmin) {
     useToast().warning('无访问权限')
-    console.log('req admin role');
     return '/admin'
   }
   if (to.meta.blockAfterLogin && store.login) {
-    console.log('req no login');
     return '/home'
   }
   if (to.path == '/profile') {

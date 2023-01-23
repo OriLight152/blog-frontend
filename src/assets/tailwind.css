@@ -23,6 +23,9 @@
   ol {
     @apply list-decimal list-inside;
   }
+  li>ol{
+    @apply pl-6
+  }
   ul {
     @apply list-disc list-inside;
   }

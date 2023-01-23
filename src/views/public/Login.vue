@@ -174,7 +174,7 @@ async function handleRegister() {
     return
   }
   register(registerParams.value.username.trim(), registerParams.value.nickname.trim(), registerParams.value.password.trim(), registerParams.value.email.trim(), registerParams.value.sex)
-    .then((result) => {
+    .then((res) => {
       toast.success('注册成功')
       isRegister.value = false
     })
