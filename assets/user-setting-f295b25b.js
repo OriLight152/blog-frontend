@@ -1,0 +1,1 @@
+import{_ as e,c as t,j as c,m as s,i as o}from"./index-2045cc68.js";const a={},n=s("p",{class:"mb-4 text-2xl font-bold"},"用户设置",-1);function r(_,l){return o(),t("div",null,[n,c(" 暂无设置项 ")])}const f=e(a,[["render",r]]);export{f as default};
