@@ -12,11 +12,12 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, toRefs } from 'vue';
+import { toRefs } from 'vue';
 import NormalButton from '@/components/common/NormalButton.vue';
 import { newPostData } from '@/core/types';
 import { useStore } from '@/store';
 import MarkdownEditor from '../common/MarkdownEditor.vue';
+import NormalEditor from '../common/NormalEditor.vue';
 
 defineEmits(['newPost'])
 
