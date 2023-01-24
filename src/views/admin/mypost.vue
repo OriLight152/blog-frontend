@@ -48,7 +48,7 @@ import { useToast } from 'vue-toastification';
 import NProgress from 'nprogress'
 import { onMounted, ref } from 'vue';
 import { PostData } from '@/core/types';
-import NormalButton from '@/components/common/button/NormalButton.vue';
+import NormalButton from '@/components/common/NormalButton.vue';
 import { pageSize } from '@/config';
 import Pagination from '@/components/common/Pagination.vue';
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex justify-center space-x-2">
+  <div class="w-full flex justify-center">
     <SideBarPostTOC :content="postData.text" v-if="postData" />
     <div class="w-full">
       <div class="w-full bg-white my-2 rounded-md overflow-hidden">
@@ -103,7 +103,7 @@ import NProgress from 'nprogress'
 import { useStore } from '@/store';
 import { useToast } from 'vue-toastification';
 import { cancelLike, getComment, getPost, newComment, submitLike } from '@/api/post';
-import NormalButton from '@/components/common/button/NormalButton.vue';
+import NormalButton from '@/components/common/NormalButton.vue';
 import CommentReply from '@/components/post/CommentReply.vue';
 import IconView from '@/components/icon/IconView.vue';
 import IconComment from '@/components/icon/IconComment.vue';
@@ -247,6 +247,7 @@ function handleNewComment() {
         toast.success('评论回复成功')
         newCommentContent.value = ''
         commentData.value = (await getComment(Number(pid)))['comments']
+        replyTo.value = 0
       })
       .catch((err) => {
         toast.error('评论回复失败：' + err)

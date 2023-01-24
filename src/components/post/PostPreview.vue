@@ -17,7 +17,7 @@
       </div>
     </div>
     <RouterLink :to="'/post/' + postData.pid">
-      <div class="ml-[80px] pl-4 pr-8">
+      <div class="lg:ml-[80px] lg:pl-4 px-8">
         <p class="text-2xl leading-[60px]">{{ postData.title }}</p>
         <p class="">{{ postData.text }}</p>
       </div>

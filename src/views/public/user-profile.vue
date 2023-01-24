@@ -49,7 +49,7 @@ import { useStore } from '@/store';
 import { getInfo } from '@/api/user';
 import { newPostData, PostData, UserProfile } from '@/core/types';
 import { deletePost, getList, newPost } from '@/api/post';
-import NormalButton from '@cp/common/button/NormalButton.vue';
+import NormalButton from '@/components/common/NormalButton.vue';
 import UserProfilePost from '@cp/post/UserProfilePost.vue';
 import Pagination from '@cp/common/Pagination.vue';
 import NewPost from '@cp/post/NewPost.vue';

@@ -24,11 +24,13 @@ import SettingPanel from '@cp/SettingPanel.vue';
 
 const store = useStore()
 
-const { likeCache, pageLoading } = toRefs(store)
+const { likeCache,setting, pageLoading } = toRefs(store)
 
 watch(likeCache, (like) => {
   localStorage.setItem('likeCache', JSON.stringify(like))
   console.debug('[like-cache] change detected, save to localStorage.', like);
 }, { deep: true })
+
+
 
 </script>

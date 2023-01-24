@@ -79,7 +79,7 @@
 
 <script setup lang="ts">
 import { login, register } from '@/api/user';
-import NormalButton from '@/components/common/button/NormalButton.vue';
+import NormalButton from '@/components/common/NormalButton.vue';
 import router from '@/router';
 import { useStore } from '@/store';
 import { computed, ref } from 'vue';

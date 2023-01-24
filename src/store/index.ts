@@ -12,6 +12,9 @@ export const useStore = defineStore('main', {
       COMMENT: [] as string[]
     },
     pageLoading: false,
-    showSettingPanel: false
+    showSettingPanel: false,
+    setting: {
+      stickyTextarea: false
+    }
   }),
 })

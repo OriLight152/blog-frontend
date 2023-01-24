@@ -8,7 +8,8 @@
       内容：
       <textarea
         class="w-full h-[100px] p-2 rounded-md border resize-none hover:border-blue-500 transition-colors overflow-y-hidden"
-        v-model="postData.text" @input="resetHeight($event.target as HTMLTextAreaElement)" ref="eleTextarea"></textarea>
+        :class="setting.stickyTextarea ? 'h-[300px]' : ''" v-model="postData.text"
+        @input="resetHeight($event.target as HTMLTextAreaElement)" ref="eleTextarea"></textarea>
       <NormalButton primary @click="handleSavePost">保存修改</NormalButton>
       <NormalButton @click="router.back()">取消</NormalButton>
     </div>
@@ -25,13 +26,13 @@ import { editPost, getPost } from '@/api/post';
 import { useStore } from '@/store';
 import router from '@/router';
 import { useToast } from 'vue-toastification';
-import NormalButton from '@/components/common/button/NormalButton.vue';
+import NormalButton from '@/components/common/NormalButton.vue';
 
 const store = useStore()
 const route = useRoute()
 const toast = useToast()
 
-const { login, uid } = toRefs(store)
+const { login, uid, setting } = toRefs(store)
 const pid = ref(String(route.params.pid))
 const postData = ref<PostDetailData | null>(null)
 const eleTextarea = ref<HTMLTextAreaElement | null>(null)
@@ -93,9 +94,10 @@ async function handleSavePost() {
 }
 
 function resetHeight(ele: HTMLTextAreaElement) {
+  if (setting.value.stickyTextarea) { return }
   ele.style.height = '100px'
   nextTick(() => {
     ele.style.height = ele.scrollHeight + 'px'
-  });
+  })
 }
 </script>

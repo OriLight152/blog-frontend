@@ -13,10 +13,12 @@
     </div>
     <div class="my-2">
       <h3>修改头像</h3>
-      修改图片地址或选择图片上传，图片最大为 5M
+      <p>修改图片地址或选择图片上传，图片最大为 5M</p>
+      <p>建议上传方向图片，防止图片被拉伸影响显示效果</p>
       <img class="w-16 h-16 my-2" :src="newAvatar" alt="user-avatar">
       <input class="px-2 py-1 w-[300px] rounded-md border hover:border-blue-500 transition-colors" type="text"
-        v-model="newAvatar" placeholder="留空则不修改"><NormalButton @click="handleUploadImage">选择图片上传</NormalButton>
+        v-model="newAvatar" placeholder="留空则不修改">
+      <NormalButton @click="handleUploadImage">选择图片上传</NormalButton>
     </div>
     <NormalButton primary @click="handleEditProfile">保存修改</NormalButton>
   </div>
@@ -25,7 +27,7 @@
 <script setup lang="ts">
 import NProgress from 'nprogress'
 import { useStore } from '@/store';
-import NormalButton from '@cp/common/button/NormalButton.vue';
+import NormalButton from '@/components/common/NormalButton.vue';
 import { computed, onMounted, ref } from 'vue';
 import { getInfo, edit, getImageUploadToken } from '@/api/user';
 import { useToast } from 'vue-toastification';

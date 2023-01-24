@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { getCommentList, deleteComment, banComment, approveComment } from '@/api/admin';
-import NormalButton from '@/components/common/button/NormalButton.vue';
+import NormalButton from '@/components/common/NormalButton.vue';
 import Pagination from '@/components/common/Pagination.vue';
 import { pageSize } from '@/config';
 import { useStore } from '@/store';

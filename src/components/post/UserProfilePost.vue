@@ -41,7 +41,7 @@ import { PostData } from '@/core/types';
 import { formatTime } from '@/utils';
 import IconLikeO from '@cp/icon/IconLikeO.vue';
 import IconComment from '@cp/icon/IconComment.vue';
-import NormalButton from '../common/button/NormalButton.vue';
+import NormalButton from '../common/NormalButton.vue';
 import IconView from '../icon/IconView.vue';
 
 defineProps<{
