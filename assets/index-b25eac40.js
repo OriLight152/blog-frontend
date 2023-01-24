@@ -1,1 +1,0 @@
-function n(g){const t=new Date(g);let e="";return e+=t.getFullYear()+"-",e+=t.getMonth()+1>9?t.getMonth()+1+"-":"0"+(t.getMonth()+1)+"-",e+=t.getDate()>9?t.getDate()+" ":"0"+t.getDate()+" ",e+=t.getHours()>9?t.getHours()+":":"0"+t.getHours()+":",e+=t.getMinutes()>9?t.getMinutes()+":":"0"+t.getMinutes()+":",e+=t.getSeconds()>9?t.getSeconds():"0"+t.getSeconds(),e}export{n as f};
