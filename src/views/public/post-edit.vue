@@ -2,23 +2,22 @@
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
     <h2>编辑文章</h2>
     <div v-if="postData">
-      标题：
+      <p class="my-2 font-bold">标题</p>
       <input class="w-full p-2 rounded-md border hover:border-blue-500 transition-colors" type="text"
         v-model="postData.title">
-      内容：
-      <textarea
-        class="w-full min-h-[100px] p-2 rounded-md border hover:border-blue-500 transition-colors overflow-y-hidden"
-        :class="setting.stickyTextarea ? 'h-[300px] overflow-y-scroll' : ''" v-model="postData.text"
-        @input="resetHeight($event.target as HTMLTextAreaElement)" ref="eleTextarea"></textarea>
-      <NormalButton primary @click="handleSavePost">保存修改</NormalButton>
-      <NormalButton @click="router.back()">取消</NormalButton>
+      <p class="my-2 font-bold">内容</p>
+      <NormalEditor v-model="postData.text" v-if="setting.legacyEditor" />
+      <MarkdownEditor class="h-[calc(100vh-400px)]" v-model="postData.text" v-else />
+      <div class="mt-2">
+        <NormalButton primary @click="handleSavePost">保存修改</NormalButton>
+        <NormalButton @click="router.back()">取消</NormalButton>
+      </div>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { onMounted, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import NProgress from 'nprogress'
 import { PostDetailData } from '@/core/types';
@@ -27,6 +26,8 @@ import { useStore } from '@/store';
 import router from '@/router';
 import { useToast } from 'vue-toastification';
 import NormalButton from '@/components/common/NormalButton.vue';
+import MarkdownEditor from '@/components/common/MarkdownEditor.vue';
+import NormalEditor from '@/components/common/NormalEditor.vue';
 
 const store = useStore()
 const route = useRoute()
@@ -46,12 +47,6 @@ onMounted(async () => {
   NProgress.start()
   await fetchData()
   NProgress.done()
-})
-
-watch(postData, async () => {
-  console.log('trigger resize textarea');
-  await nextTick()
-  resetHeight(eleTextarea.value as HTMLTextAreaElement)
 })
 
 async function fetchData() {
@@ -93,11 +88,4 @@ async function handleSavePost() {
   }
 }
 
-function resetHeight(ele: HTMLTextAreaElement) {
-  if (setting.value.stickyTextarea) { return }
-  ele.style.height = '100px'
-  nextTick(() => {
-    ele.style.height = ele.scrollHeight + 'px'
-  })
-}
 </script>

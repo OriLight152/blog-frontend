@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, toRefs, watch } from 'vue';
+import { computed, onMounted, ref, toRefs, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useRoute, useRouter } from 'vue-router';
 import NProgress from 'nprogress'
@@ -70,10 +70,10 @@ const postCount = ref(0)
 
 const enableEditMode = computed(() => login.value && userId.value == String(store.uid))
 
-watch(params, (to, from) => {
-  if (to.uid) {
+watchEffect(() => {
+  if (params.value.uid) {
     // to.params.uid 可能为 undefined
-    userId.value = String(to.uid);
+    userId.value = String(params.value.uid);
     fetchData()
   }
 })

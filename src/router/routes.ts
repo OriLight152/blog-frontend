@@ -33,6 +33,15 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
+        path: 'post-new',
+        name: 'post-new',
+        component: () => import('@/views/admin/post-new.vue'),
+        meta: {
+          title: '发布文章 - 管理后台',
+          requireLogin: true
+        }
+      },
+      {
         path: 'mypost',
         name: 'mypost',
         component: () => import('@/views/admin/mypost.vue'),

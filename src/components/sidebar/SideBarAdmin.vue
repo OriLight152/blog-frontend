@@ -1,15 +1,15 @@
 <template>
   <div class="w-[250px] h-[calc(100vh-60px)] p-2 border-r-2 overflow-y-auto shrink-0">
     <div>
-      <SideBarItem v-for="item in adminSideBarItem.user" :data="item" :active="active"
+      <SideBarItem v-for="item in adminSideBarItem.user" :data="item" :active="active === item.name"
         @click="handlePageSwitch(item.name, item.to)" />
     </div>
     <div class="border-t pt-1" v-if="isAdmin">
-      <SideBarItem v-for="item in adminSideBarItem.admin" :data="item" :active="active"
+      <SideBarItem v-for="item in adminSideBarItem.admin" :data="item" :active="active === item.name"
         @click="handlePageSwitch(item.name, item.to)" />
     </div>
     <div class="border-t pt-1">
-      <SideBarItem v-for="item in adminSideBarItem.public" :data="item" :active="active"
+      <SideBarItem v-for="item in adminSideBarItem.public" :data="item" :active="active === item.name"
         @click="handlePageSwitch(item.name, item.to)" />
     </div>
   </div>

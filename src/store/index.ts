@@ -13,13 +13,14 @@ export const useStore = defineStore('main', {
     },
     pageLoading: false,
     setting: {
-      stickyTextarea: false
+      legacyEditor: false,
+      stickyTextarea: false,
     },
     showNav: true,
     showSettingPanel: false,
     showToolBarBtn: {
       top: false,
-      bottom: false
+      bottom: true
     }
   }),
 })

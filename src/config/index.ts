@@ -13,6 +13,11 @@ export const adminSideBarItem = {
       display: '个人资料'
     },
     {
+      name: 'post-new',
+      to: '/post-new',
+      display: '发布文章'
+    },
+    {
       name: 'mypost',
       to: '/mypost',
       display: '我的文章'

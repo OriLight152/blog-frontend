@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, watch } from 'vue';
+import { toRefs, watchEffect } from 'vue';
 import Nav from '@cp/Nav.vue';
 import Footer from '@cp/Footer.vue';
 import { useStore } from '@/store';
@@ -28,10 +28,10 @@ const { likeCache, pageLoading, showToolBarBtn, showNav } = toRefs(store)
 
 let oldY = 0
 
-watch(likeCache, (like) => {
-  localStorage.setItem('likeCache', JSON.stringify(like))
-  console.debug('[like-cache] change detected, save to localStorage.', like);
-}, { deep: true })
+watchEffect(() => {
+  localStorage.setItem('likeCache', JSON.stringify(likeCache.value))
+  console.debug('[like-cache] change detected, save to localStorage.', likeCache.value);
+})
 
 window.onscroll = handleWindowScroll
 

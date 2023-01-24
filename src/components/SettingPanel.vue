@@ -12,7 +12,11 @@
       </div>
       <div class="p-4">
         <div class="flex justify-between items-center p-1">
-          <span>固定输入框高度</span>
+          <span>使用旧版编辑器</span>
+          <Switch class="ml-2" v-model="setting.legacyEditor" />
+        </div>
+        <div class="flex justify-between items-center p-1">
+          <span>固定输入框高度(旧版编辑器)</span>
           <Switch class="ml-2" v-model="setting.stickyTextarea" />
         </div>
       </div>

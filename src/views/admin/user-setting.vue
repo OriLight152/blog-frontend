@@ -1,8 +1,12 @@
 <template>
   <div>
     <p class="mb-4 text-2xl font-bold">用户设置</p>
-    <div class="flex items-center">
-      <span>固定输入框高度</span>
+    <div class="flex items-center p-1">
+      <span>使用旧版编辑器</span>
+      <Switch class="ml-2" v-model="setting.legacyEditor" />
+    </div>
+    <div class="flex items-center p-1">
+      <span>固定输入框高度(旧版编辑器)</span>
       <Switch class="ml-2" v-model="setting.stickyTextarea" />
     </div>
   </div>

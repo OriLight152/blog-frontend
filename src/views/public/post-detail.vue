@@ -28,7 +28,7 @@
           </div>
           <!-- 文章内容 -->
           <div class="p-8 pt-4">
-            <div class="leading-relaxed rendered" v-html="marked.parse(replaceShortcode(postData.text))"></div>
+            <div class="leading-relaxed rendered" v-html="renderMarkdown(postData.text)"></div>
           </div>
           <div class="flex justify-center py-6">
             <button
@@ -87,18 +87,14 @@
         </div>
       </div>
     </div>
-
   </div>
-
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, toRefs, nextTick, computed } from 'vue';
 import { CommentData, PostDetailData } from '@/core/types';
 import { useRoute } from 'vue-router';
-import { formatTime } from '@/utils';
-import { marked } from 'marked'
-import hljs from 'highlight.js/lib/common'
+import { formatTime, renderMarkdown } from '@/utils';
 import NProgress from 'nprogress'
 import { useStore } from '@/store';
 import { useToast } from 'vue-toastification';
@@ -129,22 +125,6 @@ const allowComment = computed(() => postData.value && postData.value.allowCommen
 if (login.value) {
   likeStatus.value = likeCache.value.POST.includes(String(pid))
 }
-
-// 使用 marked 自定义渲染
-const rendererPost = new marked.Renderer()
-rendererPost.link = (href, title, text) =>
-  `<a href=${href} target="_blank" class="relative px-1 z-10 hover:text-white after:link hover:after:link-hover transition-colors">${text}</a>`
-rendererPost.blockquote = (quote) =>
-  `<blockquote class="pl-4 pr-2 py-2 border-l-4 border-gray-300 bg-gray-300/20">${quote}</blockquote>`
-
-marked.setOptions({
-  highlight: function (code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-    return hljs.highlight(code, { language }).value;
-  },
-  langPrefix: 'hljs language-',
-  renderer: rendererPost
-})
 
 onMounted(() => {
   fetchData()
@@ -268,12 +248,6 @@ function handleToComment(cid: number) {
       comment?.classList.remove('animate-twinkle')
     }, 2200)
   }
-}
-
-function replaceShortcode(text: string) {
-  return marked.parse(text)
-    .replaceAll('[notice]', '<div class="bg-orange-200/20 border-l-4 border-orange-400 pl-4 pr-2 py-2 my-1">')
-    .replaceAll('[/notice]', '</div>')
 }
 
 function resetHeight(e: HTMLTextAreaElement) {
