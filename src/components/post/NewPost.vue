@@ -9,7 +9,7 @@
       class="w-full min-h-[100px] p-2 rounded-md border hover:border-blue-500 transition-colors overflow-y-hidden"
       :class="setting.stickyTextarea ? 'h-[300px] overflow-y-scroll' : ''" v-model="data.content"
       @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
-    <NormalButton @click="$emit('newPost')">发布</NormalButton>
+    <NormalButton primary @click="$emit('newPost')">发布</NormalButton>
   </div>
 </template>
 

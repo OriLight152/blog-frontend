@@ -1,15 +1,15 @@
 <template>
   <div class="w-[250px] h-[calc(100vh-60px)] p-2 border-r-2 overflow-y-auto shrink-0">
     <div>
-      <SideBarItem v-for="item in publicItem" :data="item" :active="active"
+      <SideBarItem v-for="item in adminSideBarItem.user" :data="item" :active="active"
         @click="handlePageSwitch(item.name, item.to)" />
     </div>
     <div class="border-t pt-1" v-if="isAdmin">
-      <SideBarItem v-for="item in adminItem" :data="item" :active="active"
+      <SideBarItem v-for="item in adminSideBarItem.admin" :data="item" :active="active"
         @click="handlePageSwitch(item.name, item.to)" />
     </div>
     <div class="border-t pt-1">
-      <SideBarItem v-for="item in infoItem" :data="item" :active="active"
+      <SideBarItem v-for="item in adminSideBarItem.public" :data="item" :active="active"
         @click="handlePageSwitch(item.name, item.to)" />
     </div>
   </div>
@@ -20,7 +20,7 @@ import { useStore } from '@/store';
 import { onMounted, ref, toRefs } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import SideBarItem from './SideBarItem.vue';
-import { publicItem, adminItem, infoItem } from '@/config'
+import { adminSideBarItem } from '@/config'
 
 const store = useStore()
 const router = useRouter()
@@ -34,11 +34,11 @@ onMounted(() => {
 })
 
 function handlePageSwitch(name: string, to: string) {
-  active.value = name
   if (to === 'APP_HOME') {
     router.push('/')
     return
   }
+  active.value = name
   router.push('/admin' + to)
 }
 </script>

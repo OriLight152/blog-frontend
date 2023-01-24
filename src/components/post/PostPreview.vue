@@ -72,7 +72,7 @@ function btnClickLike() {
   }
   if (!likeStatus.value) {
     submitLike(store.token, 'POST', props.postData.pid)
-      .then((result) => {
+      .then((res) => {
         likeStatus.value = !likeStatus.value
         props.postData.like += 1
       })
@@ -85,7 +85,7 @@ function btnClickLike() {
       })
   } else {
     cancelLike(store.token, 'POST', props.postData.pid)
-      .then((result) => {
+      .then((res) => {
         likeStatus.value = !likeStatus.value
         props.postData.like -= 1
       })

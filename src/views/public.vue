@@ -24,13 +24,27 @@ import SettingPanel from '@cp/SettingPanel.vue';
 
 const store = useStore()
 
-const { likeCache,setting, pageLoading } = toRefs(store)
+const { likeCache, pageLoading, showToolBarBtn, showNav } = toRefs(store)
+
+let oldY = 0
 
 watch(likeCache, (like) => {
   localStorage.setItem('likeCache', JSON.stringify(like))
   console.debug('[like-cache] change detected, save to localStorage.', like);
 }, { deep: true })
 
+window.onscroll = handleWindowScroll
 
+function handleWindowScroll(e: Event) {
+  const newY = document.documentElement.scrollTop
+  if (newY > oldY && newY > 100) {
+    showNav.value = false
+  } else if (newY < oldY) {
+    showNav.value = true
+  }
+  oldY = newY
+  showToolBarBtn.value.top = document.documentElement.scrollTop > 20
+  showToolBarBtn.value.bottom = (document.body.scrollHeight - window.screen.height - document.documentElement.scrollTop) > 20
+}
 
 </script>
