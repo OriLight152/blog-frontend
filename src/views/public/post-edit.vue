@@ -7,7 +7,7 @@
         v-model="postData.title">
       内容：
       <textarea
-        class="w-full h-[100px] p-2 rounded-md border resize-none hover:border-blue-500 transition-colors overflow-y-hidden"
+        class="w-full min-h-[100px] p-2 rounded-md border hover:border-blue-500 transition-colors overflow-y-hidden"
         :class="setting.stickyTextarea ? 'h-[300px]' : ''" v-model="postData.text"
         @input="resetHeight($event.target as HTMLTextAreaElement)" ref="eleTextarea"></textarea>
       <NormalButton primary @click="handleSavePost">保存修改</NormalButton>
