@@ -8,7 +8,7 @@
       内容：
       <textarea
         class="w-full min-h-[100px] p-2 rounded-md border hover:border-blue-500 transition-colors overflow-y-hidden"
-        :class="setting.stickyTextarea ? 'h-[300px]' : ''" v-model="postData.text"
+        :class="setting.stickyTextarea ? 'h-[300px] overflow-y-scroll' : ''" v-model="postData.text"
         @input="resetHeight($event.target as HTMLTextAreaElement)" ref="eleTextarea"></textarea>
       <NormalButton primary @click="handleSavePost">保存修改</NormalButton>
       <NormalButton @click="router.back()">取消</NormalButton>

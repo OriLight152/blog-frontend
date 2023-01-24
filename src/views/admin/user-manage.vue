@@ -140,7 +140,7 @@ function handleDeleteUser(uid: number) {
       fetchData()
     })
     .catch((err: any) => {
-      toast.error('解禁用户失败：' + err.message)
+      toast.error('删除用户失败：' + err.message)
     })
 }
 
