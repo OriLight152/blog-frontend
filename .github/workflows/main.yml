@@ -23,10 +23,22 @@ jobs:
     - name: Build
       run: yarn && yarn build
       
-    - name: Deploy
+    - name: Deploy to Github Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: build
         publish_dir: ./dist
         cname: blog.app.orght.cn
+        
+    - name: Deploy to Server
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      with:
+        username: ${{ secrets.FTP_USERNAME }}
+        server: ${{ secrets.FTP_SERVER }}
+        port: ${{ secrets.FTP_PORT }}
+        local_path: './dist/*'
+        remote_path: ${{ secrets.REMOTE_PATH }}
+        sftp_only: true
+        password: ${{ secrets.FTP_PASSWORD }}
+
