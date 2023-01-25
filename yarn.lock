@@ -941,6 +941,11 @@ util-deprecate@^1.0.2:
   resolved "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
+vite-plugin-version-mark@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.npmmirror.com/vite-plugin-version-mark/-/vite-plugin-version-mark-0.0.4.tgz#928e5271f25311dfecce2845add0e3c53de4d455"
+  integrity sha512-qIdCLxkLqygh6XSOL/We5ynUT6c1ZF2HT5axN6a18wIzGfkiWCZhRa83ricDMQYLlMH+J2FWczV55ITcRpJ7BQ==
+
 vite@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmmirror.com/vite/-/vite-4.0.0.tgz#b81b88349a06b2faaa53ae14cf96c942548e3454"
