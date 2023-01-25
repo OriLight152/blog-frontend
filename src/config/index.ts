@@ -2,6 +2,9 @@ export const baseURL = 'https://blog-server-api.amarea.cn'
 // export const baseURL = 'http://localhost:3000'
 export const imageUploadApiURL = 'https://img.amarea.cn/api/v1/upload'
 
+export const frontendRepo = 'https://github.com/OriLight152/blog-frontend'
+export const backendRepo = 'https://github.com/OriLight152/blog-frontend'
+
 export const pageSize = 10
 
 export const adminSideBarItem = {

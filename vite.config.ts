@@ -9,7 +9,7 @@ export default defineConfig({
     vue(),
     vitePluginVersionMark({
       ifGitSHA: true,
-      ifShortSHA: true,
+      ifShortSHA: false,
       ifMeta: false,
       ifLog: false,
       ifGlobal: true,

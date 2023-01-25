@@ -1,3 +1,3 @@
 interface Window {
-  __blog_VERSION__: string;
+  __BLOG_VERSION__: string;
 }
