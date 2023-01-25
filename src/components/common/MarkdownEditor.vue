@@ -26,6 +26,7 @@ const emits = defineEmits(['update:modelValue'])
 
 const preview = ref(renderMarkdown(props.modelValue))
 
+// 使用 debounce 防抖函数减少更新，优化性能
 const update = debounce((value) => {
   preview.value = renderMarkdown(value)
   emits('update:modelValue', value)

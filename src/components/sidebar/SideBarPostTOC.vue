@@ -5,7 +5,7 @@
       <div class="px-2 py-1 hover:bg-gray-500/20 rounded-md cursor-pointer" v-for="title in titles"
         @click="navToTitle(title)">{{
   title.replace(/(#{1,6})\s/g, (item, p0) => {
-    return '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat((p0.length - 2))
+    return '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat((p0.length - 1))
   })
         }}</div>
     </div>
