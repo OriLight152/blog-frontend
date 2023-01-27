@@ -1,15 +1,17 @@
 <template>
-  <RouterLink
-    class="w-full text-center text-2xl font-bold block py-4 my-2 bg-white hover:bg-gray-200 transition-colors rounded-md shadow-sm"
-    to="/post/35">
-    点击前往作业报告
-  </RouterLink>
-  <Transition>
-    <div v-show="posts.length !== 0">
-      <PostPreview v-for="post in posts" :post-data="post" />
-    </div>
-  </Transition>
-  <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
+  <div>
+    <RouterLink
+      class="w-full text-center text-2xl font-bold block py-4 my-2 bg-white hover:bg-gray-200 transition-colors rounded-md shadow-sm"
+      to="/post/35">
+      点击前往作业报告
+    </RouterLink>
+    <Transition name="popup-t">
+      <div v-show="posts.length !== 0">
+        <PostPreview v-for="post in posts" :post-data="post" />
+      </div>
+    </Transition>
+    <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -60,16 +62,3 @@ function handlePageChange(page: number) {
   fetchData()
 }
 </script>
-
-<style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.3s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-</style>

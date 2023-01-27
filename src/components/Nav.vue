@@ -1,6 +1,6 @@
 <template>
   <div class="h-[60px] w-full">
-    <Transition>
+    <Transition name="popup-t-lg">
       <div class="fixed h-[60px] w-full top-0 left-0 bg-white shadow-md z-[99]" v-show="showNav">
         <div class="lg:w-[960px] mx-auto my-0 flex">
           <RouterLink class="flex-1 hover:text-gray-400" to="/home">
@@ -32,16 +32,3 @@ const store = useStore()
 const { login, showNav } = toRefs(store)
 
 </script>
-
-<style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.3s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-  transform: translateY(-100px);
-}
-</style>

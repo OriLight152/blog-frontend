@@ -1,41 +1,43 @@
 <template>
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
-    <div class="absolute top-4 right-4" v-if="enableEditMode">
-      <NormalButton @click="handleGoAdmin">进入后台</NormalButton>
-      <NormalButton class="ml-1" @click="handleLogout">退出登录</NormalButton>
-    </div>
-    <h2>{{ enableEditMode? '我的': '用户' }}信息</h2>
-    <template v-if="!userProfile">
-      <div class="text-center">加载中</div>
-    </template>
-    <template v-else>
-      <div class="flex flex-col w-full items-center">
-        <img class="rounded-full w-[120px] h-[120px] shadow-md" :src="userProfile?.avatar" alt="user avatar">
-        <span class="font-bold mt-4">{{ userProfile?.nickname }}</span>
-        <span class="text-gray-500">@{{ userProfile?.name }}</span>
-        <div class="mt-2">
-          <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
-          <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
-          <span class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white"
-            v-if="userProfile.status !== 0">用户已被封禁</span>
-        </div>
+  <div>
+    <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
+      <div class="absolute top-4 right-4" v-if="enableEditMode">
+        <NormalButton @click="handleGoAdmin">进入后台</NormalButton>
+        <NormalButton class="ml-1" @click="handleLogout">退出登录</NormalButton>
       </div>
-    </template>
-  </div>
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4" v-if="enableEditMode">
-    <NewPost :data="newPostParams" @new-post="handleNewPost" />
-  </div>
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
-    <h2>{{ enableEditMode? '我的': '用户' }}文章</h2>
-    <div class="text-center pb-4" v-if="userPosts.length == 0">
-      <span>这里还什么都没有呢</span>
+      <h2>{{ enableEditMode? '我的': '用户' }}信息</h2>
+      <template v-if="!userProfile">
+        <div class="text-center">加载中</div>
+      </template>
+      <template v-else>
+        <div class="flex flex-col w-full items-center">
+          <img class="rounded-full w-[120px] h-[120px] shadow-md" :src="userProfile?.avatar" alt="user avatar">
+          <span class="font-bold mt-4">{{ userProfile?.nickname }}</span>
+          <span class="text-gray-500">@{{ userProfile?.name }}</span>
+          <div class="mt-2">
+            <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
+            <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
+            <span class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white"
+              v-if="userProfile.status !== 0">用户已被封禁</span>
+          </div>
+        </div>
+      </template>
     </div>
-    <template v-else>
-      <UserProfilePost v-for="post in userPosts" :post-data="post" :edit-mode="enableEditMode"
-        @delete="handleDeletePost" />
-      <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize"
-        @change="handlePageChange" />
-    </template>
+    <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4" v-if="enableEditMode">
+      <NewPost :data="newPostParams" @new-post="handleNewPost" />
+    </div>
+    <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
+      <h2>{{ enableEditMode? '我的': '用户' }}文章</h2>
+      <div class="text-center pb-4" v-if="userPosts.length == 0">
+        <span>这里还什么都没有呢</span>
+      </div>
+      <template v-else>
+        <UserProfilePost v-for="post in userPosts" :post-data="post" :edit-mode="enableEditMode"
+          @delete="handleDeletePost" />
+        <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize"
+          @change="handlePageChange" />
+      </template>
+    </div>
   </div>
 </template>
 

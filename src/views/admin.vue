@@ -4,7 +4,9 @@
     <div class="flex w-full">
       <SideBarAdmin />
       <div class="w-full p-6 h-[calc(100vh-60px)] overflow-y-auto">
-        <RouterView />
+        <Transition name="page-in">
+          <RouterView />
+        </Transition>
       </div>
     </div>
   </div>

@@ -183,5 +183,4 @@ async function handleRegister() {
     });
 }
 
-
 </script>

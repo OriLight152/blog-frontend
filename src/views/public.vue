@@ -2,7 +2,9 @@
   <div class="w-full min-h-screen bg-gray-100">
     <Nav />
     <div class="lg:w-[960px] mx-auto my-0">
-      <RouterView />
+      <Transition name="page-in">
+        <RouterView />
+      </Transition>
       <div class="w-full my-10 flex justify-center" v-if="pageLoading">
         <IconLoading class="w-20 h-20" />
       </div>

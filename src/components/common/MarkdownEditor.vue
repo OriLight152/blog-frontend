@@ -1,28 +1,24 @@
 <template>
   <div class="flex min-h-[400px] h-full shadow-[0_2px_12px_0_rgb(0_0_0/10%)]">
-    <Transition>
-      <div class="flex-1 flex-shrink-0 flex flex-col pl-4 pb-4 w-1/2 h-full overflow-hidden" v-show="showMode !== 2">
-        <h2>Markdown <NormalButton icon class="font-normal text-base" @click="showMode = showMode ? 0 : 1">
-            <IconReturn class="w-4 h-4" v-if="showMode" />
-            <IconView class="w-4 h-4" v-else />
-          </NormalButton>
-        </h2>
-        <textarea class="w-full h-full pr-4 overflow-y-auto resize-none border-none outline-none" :value="modelValue"
-          @input="handleInput($event.target as HTMLTextAreaElement)" @scroll="alignPreview"></textarea>
+    <div class="flex-1 flex-shrink-0 flex flex-col pl-4 pb-4 w-1/2 h-full overflow-hidden" v-show="showMode !== 2">
+      <h2>Markdown <NormalButton icon class="font-normal text-base" @click="showMode = showMode ? 0 : 1">
+          <IconReturn class="w-4 h-4" v-if="showMode" />
+          <IconView class="w-4 h-4" v-else />
+        </NormalButton>
+      </h2>
+      <textarea class="w-full h-full pr-4 overflow-y-auto resize-none border-none outline-none" :value="modelValue"
+        @input="handleInput($event.target as HTMLTextAreaElement)" @scroll="alignPreview"></textarea>
+    </div>
+    <div class="flex-1 flex-shrink-0 flex flex-col pl-4 pb-4 w-1/2 h-full overflow-hidden border-l"
+      v-show="showMode !== 1">
+      <h2>预览 <NormalButton icon class="font-normal text-base" @click="showMode = showMode ? 0 : 2">
+          <IconReturn class="w-4 h-4" v-if="showMode" />
+          <IconView class="w-4 h-4" v-else />
+        </NormalButton>
+      </h2>
+      <div class="w-full h-full pr-4 overflow-y-auto" v-html="preview" ref="elePreview">
       </div>
-    </Transition>
-    <Transition>
-      <div class="flex-1 flex-shrink-0 flex flex-col pl-4 pb-4 w-1/2 h-full overflow-hidden border-l"
-        v-show="showMode !== 1">
-        <h2>预览 <NormalButton icon class="font-normal text-base" @click="showMode = showMode ? 0 : 2">
-            <IconReturn class="w-4 h-4" v-if="showMode" />
-            <IconView class="w-4 h-4" v-else />
-          </NormalButton>
-        </h2>
-        <div class="w-full h-full pr-4 overflow-y-auto" v-html="preview" ref="elePreview">
-        </div>
-      </div>
-    </Transition>
+    </div>
   </div>
 </template>
 
@@ -73,15 +69,3 @@ function handleInput(ele: HTMLTextAreaElement) {
 }
 
 </script>
-
-<style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-</style>

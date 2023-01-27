@@ -1,14 +1,16 @@
 
 <template>
-  <p class="mb-4 text-2xl font-bold">发布文章</p>
-  <div class="w-full">
-    <p class="my-2 font-bold">标题</p>
-    <input class="w-full px-2 py-1 rounded-md border hover:border-blue-500 transition-colors" v-model="newPostTitle"
-      placeholder="有什么新鲜事要向大家分享？" maxlength="30">
-    <p class="my-2 font-bold">内容</p>
-    <NormalEditor v-model="newPostContent" v-if="setting.legacyEditor" />
-    <MarkdownEditor class="h-[calc(100vh-320px)]" v-model="newPostContent" v-else />
-    <NormalButton class="mt-2" primary>发布</NormalButton>
+  <div>
+    <p class="mb-4 text-2xl font-bold">发布文章</p>
+    <div class="w-full">
+      <p class="my-2 font-bold">标题</p>
+      <input class="w-full px-2 py-1 rounded-md border hover:border-blue-500 transition-colors" v-model="newPostTitle"
+        placeholder="有什么新鲜事要向大家分享？" maxlength="30">
+      <p class="my-2 font-bold">内容</p>
+      <NormalEditor v-model="newPostContent" v-if="setting.legacyEditor" />
+      <MarkdownEditor class="h-[calc(100vh-320px)]" v-model="newPostContent" v-else />
+      <NormalButton class="mt-2" primary>发布</NormalButton>
+    </div>
   </div>
 </template>
 

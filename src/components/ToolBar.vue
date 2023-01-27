@@ -1,5 +1,5 @@
 <template>
-  <Transition>
+  <Transition name="popup-r-lg">
     <div class="fixed bottom-6 right-4 flex flex-col space-y-1" v-show="!showSettingPanel">
       <button class="rounded-md bg-gray-300/80 hover:bg-blue-500 hover:text-white p-2 transition-colors"
         @click="showSettingPanel = true">
@@ -47,16 +47,3 @@ function handleScrollToBottom() {
 }
 
 </script>
-
-<style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.3s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-  transform: translateX(100px);
-}
-</style>

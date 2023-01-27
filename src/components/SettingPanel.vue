@@ -1,5 +1,5 @@
 <template>
-  <Transition>
+  <Transition name="popup-b">
     <div class="fixed w-full bottom-0 right-0 lg:w-auto lg:bottom-6 lg:right-4 p-4 z-10 bg-white border rounded-md shadow-md" v-show="showSettingPanel">
       <div class="text-lg font-bold mb-2 flex justify-between items-center">
         <span>设置项</span>
@@ -47,16 +47,3 @@ function hiddenPanel() {
 }
 
 </script>
-
-<style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.3s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-  transform: translateX(100px) scale(0);
-}
-</style>
