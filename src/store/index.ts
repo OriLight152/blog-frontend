@@ -15,6 +15,7 @@ export const useStore = defineStore('main', {
     setting: {
       legacyEditor: false,
       stickyTextarea: false,
+      autoAlign: false
     },
     showNav: true,
     showSettingPanel: false,
