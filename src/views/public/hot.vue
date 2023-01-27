@@ -5,7 +5,11 @@
       <p>浏览量最多的20篇文章</p>
     </div>
   </div>
-  <PostPreview v-for="post in posts" :post-data="post" />
+  <Transition>
+    <div v-show="posts.length !== 0">
+      <PostPreview v-for="post in posts" :post-data="post" />
+    </div>
+  </Transition>
 </template>
 <script setup lang="ts">
 import { PostData } from '@/core/types';
@@ -24,7 +28,7 @@ onMounted(() => {
 })
 
 function fetchData() {
-    // 获取热门文章数据
+  // 获取热门文章数据
   NProgress.start()
   store.pageLoading = true
   getHotList()
@@ -38,3 +42,16 @@ function fetchData() {
 }
 
 </script>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+</style>

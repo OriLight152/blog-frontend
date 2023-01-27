@@ -2,8 +2,8 @@
   <div class="w-full flex justify-center">
     <SideBarPostTOC :content="postData.text" v-if="postData" />
     <div class="w-full">
-      <div class="w-full bg-white my-2 rounded-md overflow-hidden">
-        <template v-if="postData">
+      <Transition>
+        <div class="w-full bg-white my-2 rounded-md overflow-hidden" v-if="postData">
           <div class="px-8 pt-4">
             <p class="text-3xl leading-[60px] font-bold">{{ postData.title }}</p>
           </div>
@@ -39,8 +39,8 @@
               <span class="leading-4">{{ postData.like }}</span>
             </button>
           </div>
-        </template>
-      </div>
+        </div>
+      </Transition>
       <div class="w-full bg-white my-2 rounded-md overflow-hidden px-4 pt-2 pb-8" id="comment">
         <h2>评论区</h2>
         <div>
@@ -258,29 +258,7 @@ function resetHeight(e: HTMLTextAreaElement) {
 }
 </script>
 
-<style lang="postcss">
-@tailwind utilities;
-
-@layer utilities {
-  .link {
-    display: block;
-    content: ' ';
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    background-color: rgb(86, 145, 255);
-    transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-    z-index: -1;
-  }
-
-  .link-hover {
-    height: 100%;
-  }
-}
-
+<style>
 img {
   @apply max-w-full rounded-xl;
 }
@@ -291,5 +269,16 @@ code.hljs {
 
 .rendered>* {
   @apply my-2;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>

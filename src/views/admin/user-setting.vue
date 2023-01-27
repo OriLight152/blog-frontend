@@ -2,6 +2,10 @@
   <div>
     <p class="mb-4 text-2xl font-bold">用户设置</p>
     <div class="flex items-center p-1">
+      <span>根本对不齐的自动对齐</span>
+      <Switch class="ml-2" v-model="setting.autoAlign" />
+    </div>
+    <div class="flex items-center p-1">
       <span>使用旧版编辑器</span>
       <Switch class="ml-2" v-model="setting.legacyEditor" />
     </div>

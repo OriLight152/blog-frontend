@@ -4,7 +4,11 @@
     to="/post/35">
     点击前往作业报告
   </RouterLink>
-  <PostPreview v-for="post in posts" :post-data="post" />
+  <Transition>
+    <div v-show="posts.length !== 0">
+      <PostPreview v-for="post in posts" :post-data="post" />
+    </div>
+  </Transition>
   <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
 </template>
 
@@ -56,3 +60,16 @@ function handlePageChange(page: number) {
   fetchData()
 }
 </script>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+</style>
