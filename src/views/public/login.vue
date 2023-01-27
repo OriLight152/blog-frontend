@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="w-[400px] bg-white mt-4 mx-auto px-8 pt-2 pb-6 rounded-[10px] overflow-hidden shadow-sm">
+    <div class="w-full md:w-[400px] bg-white mt-4 mx-auto px-8 pt-2 pb-6 rounded-[10px] overflow-hidden shadow-sm">
       <template v-if="!isRegister">
         <h1 class="text-center">用户登录</h1>
         <div class="border rounded-md mt-10">
