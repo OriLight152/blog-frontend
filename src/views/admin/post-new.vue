@@ -9,21 +9,26 @@
       <p class="my-2 font-bold">内容</p>
       <NormalEditor v-model="newPostContent" v-if="setting.legacyEditor" />
       <MarkdownEditor class="h-[calc(100vh-320px)]" v-model="newPostContent" v-else />
-      <NormalButton class="mt-2" primary>发布</NormalButton>
+      <NormalButton class="mt-2" primary @click="handleNewPost">发布</NormalButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { marked } from 'marked'
-import { ref, watchEffect, toRefs, nextTick } from 'vue';
+import { ref, watchEffect, toRefs } from 'vue';
 import { debounce } from 'lodash'
 import { useStore } from '@/store';
 import NormalButton from '@/components/common/NormalButton.vue';
 import MarkdownEditor from '@/components/common/MarkdownEditor.vue';
 import NormalEditor from '@/components/common/NormalEditor.vue';
+import { newPost } from '@/api/post';
+import { useToast } from 'vue-toastification';
+import { useRouter } from 'vue-router';
 
 const store = useStore()
+const toast = useToast()
+const router = useRouter()
 
 const { setting } = toRefs(store)
 
@@ -38,5 +43,25 @@ const update = debounce((value) => {
 watchEffect(() => {
   update(newPostContent.value)
 })
+
+async function handleNewPost() {
+  // 发布文章
+  if (newPostTitle.value.trim() == '') {
+    toast.warning('文章标题不可为空')
+    return
+  }
+  if (newPostContent.value.trim() == '') {
+    toast.warning('文章内容不可为空')
+    return
+  }
+  newPost(store.token, newPostTitle.value.trim(), newPostContent.value.trim())
+    .then((result) => {
+      toast.success('发布成功')
+      router.push('/admin/mypost')
+    })
+    .catch((err) => {
+      toast.error('发布失败: ' + err)
+    });
+}
 
 </script>

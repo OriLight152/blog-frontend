@@ -4,9 +4,11 @@
     <div class="flex w-full">
       <SideBarAdmin />
       <div class="w-full p-6 h-[calc(100vh-60px)] overflow-y-auto">
-        <Transition name="page-in">
-          <RouterView />
-        </Transition>
+        <RouterView v-slot="{ Component }">
+          <Transition name="page-in">
+            <component :is="Component" />
+          </Transition>
+        </RouterView>
       </div>
     </div>
   </div>
