@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-c27b6911.js";import{c as t,i as o,k as s,h as c}from"./index-fd957ea8.js";const r={},a=s("p",{class:"mb-4 text-2xl font-bold"},"系统设置",-1);function n(_,l){return c(),t("div",null,[a,o(" 暂无设置项 ")])}const i=e(r,[["render",n]]);export{i as default};
