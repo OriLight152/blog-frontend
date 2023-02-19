@@ -33,7 +33,8 @@ watchEffect(() => {
 .page-in-leave-from,
 .page-in-leave-to {
   /* 防错位 */
-  display: none;
+  position: absolute;
+  opacity: 0;
 }
 
 /* 上方弹出过渡 */
