@@ -1,3 +1,4 @@
 interface Window {
-  __BLOG_VERSION__: string;
+  __BUILD_COMMIT__: string;
+  __BUILD_TIME__: string;
 }
