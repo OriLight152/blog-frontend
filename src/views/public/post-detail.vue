@@ -2,7 +2,8 @@
   <div class="w-full flex justify-center">
     <SideBarPostTOC :content="postData.text" v-if="postData" />
     <div class="w-full">
-      <Transition>
+      <slot name="loading" />
+      <Transition name="popup-t">
         <div class="w-full bg-white my-2 rounded-md overflow-hidden" v-if="postData">
           <div class="px-8 pt-4">
             <p class="text-3xl leading-[60px] font-bold">{{ postData.title }}</p>

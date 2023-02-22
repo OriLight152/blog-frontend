@@ -5,6 +5,7 @@
       to="/post/35">
       点击前往作业报告
     </RouterLink>
+    <slot name="loading" />
     <Transition name="popup-t">
       <div v-show="posts.length !== 0">
         <PostPreview v-for="post in posts" :post-data="post" />

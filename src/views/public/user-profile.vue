@@ -6,6 +6,7 @@
         <NormalButton class="ml-1" @click="handleLogout">退出登录</NormalButton>
       </div>
       <h2>{{ enableEditMode? '我的': '用户' }}信息</h2>
+      <slot name="loading" />
       <template v-if="!userProfile">
         <div class="text-center">加载中</div>
       </template>

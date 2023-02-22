@@ -1,6 +1,7 @@
 <template>
   <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
     <h2>编辑文章</h2>
+    <slot name="loading" />
     <div v-if="postData">
       <p class="my-2 font-bold">标题</p>
       <input class="w-full p-2 rounded-md border hover:border-blue-500 transition-colors" type="text"

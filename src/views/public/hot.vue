@@ -6,6 +6,7 @@
         <p>浏览量最多的20篇文章</p>
       </div>
     </div>
+    <slot name="loading" />
     <Transition name="popup-t">
       <div v-show="posts.length !== 0">
         <PostPreview v-for="post in posts" :post-data="post" />

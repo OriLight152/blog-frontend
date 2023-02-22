@@ -4,12 +4,15 @@
     <div class="lg:w-[960px] mx-auto my-0">
       <RouterView v-slot="{ Component }">
         <Transition name="page-in">
-          <component :is="Component" />
+          <component :is="Component">
+            <template v-slot:loading>
+              <div class="w-full my-10 flex justify-center" v-if="pageLoading">
+                <IconLoading class="w-20 h-20" />
+              </div>
+            </template>
+          </component>
         </Transition>
       </RouterView>
-      <div class="w-full my-10 flex justify-center" v-if="pageLoading">
-        <IconLoading class="w-20 h-20" />
-      </div>
     </div>
     <Footer />
     <SettingPanel />
