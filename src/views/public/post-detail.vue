@@ -1,28 +1,28 @@
 <template>
-  <div class="w-full flex justify-center">
+  <div class="flex justify-center w-full">
     <SideBarPostTOC :content="postData.text" v-if="postData" />
     <div class="w-full">
       <slot name="loading" />
       <Transition name="popup-t">
-        <div class="w-full bg-white my-2 rounded-md overflow-hidden" v-if="postData">
+        <div class="w-full my-2 overflow-hidden bg-white rounded-md" v-if="postData">
           <div class="px-8 pt-4">
             <p class="text-3xl leading-[60px] font-bold">{{ postData.title }}</p>
           </div>
           <div class="flex px-8 py-2 bg-gray-300/20">
             <RouterLink :to="'/user/' + postData.user.uid">
-              <img class="rounded-full w-12 h-12 mr-4" :src="postData.user.avatar" alt="avatar">
+              <img class="w-12 h-12 mr-4 rounded-full" :src="postData.user.avatar" alt="avatar">
             </RouterLink>
             <div class="flex flex-col">
               <RouterLink :to="'/user/' + postData.user.uid">
                 <span class="mt-2 text-lg font-bold">{{ postData.user.nickname }}</span>
               </RouterLink>
-              <div class="text-gray-500 flex items-center text-sm">
+              <div class="flex items-center text-sm text-gray-500">
                 <span>发布于 {{ formatTime(postData.createdAt) }}</span>
-                <IconView class="w-4 h-4 inline-block ml-2 mr-1" />
+                <IconView class="inline-block w-4 h-4 ml-2 mr-1" />
                 <span>{{ postData.viewCount }}</span>
-                <IconComment class="w-4 h-4 inline-block ml-2 mr-1" />
+                <IconComment class="inline-block w-4 h-4 ml-2 mr-1" />
                 <span>{{ commentData.length }}</span>
-                <IconLikeO class="w-4 h-4 inline-block ml-2 mr-1" />
+                <IconLikeO class="inline-block w-4 h-4 ml-2 mr-1" />
                 <span>{{ postData.like }}</span>
               </div>
             </div>
@@ -33,7 +33,7 @@
           </div>
           <div class="flex justify-center py-6">
             <button
-              class="w-16 h-16 border-2 flex flex-col items-center justify-center rounded-full border-gray-200 hover:bg-gray-200 transition-colors"
+              class="flex flex-col items-center justify-center w-16 h-16 transition-colors border-2 border-gray-200 rounded-full hover:bg-gray-200"
               @click="handleLike">
               <IconLikeS v-if="likeStatus" class="w-6 h-6 text-red-500" />
               <IconLikeO v-else class="w-6 h-6 text-gray-500" />
@@ -42,13 +42,13 @@
           </div>
         </div>
       </Transition>
-      <div class="w-full bg-white my-2 rounded-md overflow-hidden px-4 pt-2 pb-8" id="comment">
+      <div class="w-full px-4 pt-2 pb-8 my-2 overflow-hidden bg-white rounded-md" id="comment">
         <h2>评论区</h2>
         <div>
           <div class="mb-2" v-if="replyTo !== 0">
             回复 {{ commentData.find((item) => item.cid === replyTo)?.user.nickname }}
           </div>
-          <textarea class="w-full p-2 rounded-md border resize-none" v-model="newCommentContent"
+          <textarea class="w-full p-2 border rounded-md resize-none" v-model="newCommentContent"
             :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!(allowComment && login)"
             @input="resetHeight($event.target as HTMLTextAreaElement)"></textarea>
           <NormalButton class="mr-2" primary @click="handleNewComment" v-if="login && allowComment">{{ replyTo === 0 ?
@@ -58,20 +58,20 @@
           </NormalButton>
           <NormalButton class="mr-2" v-if="replyTo !== 0" @click="replyTo = 0">取消回复</NormalButton>
         </div>
-        <p class="text-center mb-4" v-if="!login">登录后才可发表评论 <RouterLink to="/login" class="text-blue-800">
+        <p class="mb-4 text-center" v-if="!login">登录后才可发表评论 <RouterLink to="/login" class="text-blue-800">
             去登录</RouterLink>
         </p>
         <p class="text-center" v-if="commentData.length === 0">暂无评论</p>
-        <div class="mt-4 p-1">
-          <div class="my-2 py-2 flex" v-for="comment in commentData" :id="'comment-' + comment.cid">
+        <div class="p-1 mt-4">
+          <div class="flex py-2 my-2" v-for="comment in commentData" :id="'comment-' + comment.cid">
             <div class="shrink-0">
               <RouterLink :to="'/user/' + comment.user.uid">
                 <img class="w-12 h-12 rounded-full" :src="comment.user.avatar">
               </RouterLink>
-              <button class="w-12 text-center text-sm" v-if="login && allowComment"
+              <button class="w-12 text-sm text-center" v-if="login && allowComment"
                 @click="replyTo = comment.cid">回复</button>
             </div>
-            <div class="ml-2 flex-1">
+            <div class="flex-1 ml-2">
               <div>
                 <span class="font-bold"> {{ comment.user.nickname }}</span>
                 <span v-if="postData?.author === comment.user.uid"
@@ -133,11 +133,12 @@ onMounted(() => {
       if (navigate) {
         switch (navigate) {
           case 'comments':
-            // document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            window.scrollTo({
-              top: (document.getElementById('comment')?.getBoundingClientRect().top as number) - 65,
-              behavior: 'smooth'
-            });
+            nextTick(()=>{
+              window.scrollTo({
+                top: (document.getElementById('comment')?.getBoundingClientRect().top as number) - 65,
+                behavior: 'smooth'
+              });
+            })
             break;
         }
       }
