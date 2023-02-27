@@ -165,7 +165,6 @@ async function fetchData() {
       postData.value = post['post']
       commentData.value = comment['comments']
       document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - Ori博客'
-      const viewer = document.querySelectorAll('.v-viewer-img')
     })
     .catch(err => {
       toast.error(err.message)

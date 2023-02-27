@@ -14,7 +14,7 @@
     <div class="my-2">
       <h3>修改头像</h3>
       <p>修改图片地址或选择图片上传，图片最大为 5M</p>
-      <p>建议上传方向图片，防止图片被拉伸影响显示效果</p>
+      <p>建议上传方形图片，防止图片被拉伸影响显示效果</p>
       <img class="w-16 h-16 my-2" :src="newAvatar" alt="user-avatar">
       <input class="px-2 py-1 w-[300px] rounded-md border hover:border-blue-500 transition-colors" type="text"
         v-model="newAvatar" placeholder="留空则不修改">

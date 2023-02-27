@@ -73,5 +73,6 @@ export const adminSideBarItem = {
 }
 
 export const viewerConfig = {
-  
+  fullscreen: true,
+  zoomRatio: 1,
 }
