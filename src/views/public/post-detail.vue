@@ -129,6 +129,10 @@ if (login.value) {
 }
 
 onMounted(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
   fetchData()
     .then(() => {
       if (navigate) {
