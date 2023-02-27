@@ -71,3 +71,7 @@ export const adminSideBarItem = {
   ]
 
 }
+
+export const viewerConfig = {
+  
+}

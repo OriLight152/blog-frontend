@@ -29,7 +29,7 @@
           </div>
           <!-- 文章内容 -->
           <div class="p-8 pt-4">
-            <div class="leading-relaxed rendered" v-html="renderMarkdown(postData.text)"></div>
+            <div class="leading-relaxed rendered" v-viewer="{viewerConfig}" v-html="renderMarkdown(postData.text)"></div>
           </div>
           <div class="flex justify-center py-6">
             <button
@@ -107,6 +107,7 @@ import IconComment from '@/components/icon/IconComment.vue';
 import IconLikeO from '@/components/icon/IconLikeO.vue';
 import IconLikeS from '@/components/icon/IconLikeS.vue';
 import SideBarPostTOC from '@/components/sidebar/SideBarPostTOC.vue';
+import{ viewerConfig } from '@/config'
 
 const store = useStore()
 const route = useRoute()
@@ -160,6 +161,7 @@ async function fetchData() {
       postData.value = post['post']
       commentData.value = comment['comments']
       document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - Ori博客'
+      const viewer = document.querySelectorAll('.v-viewer-img')
     })
     .catch(err => {
       toast.error(err.message)
@@ -261,12 +263,12 @@ function resetHeight(e: HTMLTextAreaElement) {
 </script>
 
 <style>
-img {
-  @apply max-w-full rounded-xl;
-}
-
 code.hljs {
   @apply rounded-xl leading-normal;
+}
+
+.rendered img {
+  @apply max-w-full rounded-xl;
 }
 
 .rendered>* {

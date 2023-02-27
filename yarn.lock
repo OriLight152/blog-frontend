@@ -941,6 +941,19 @@ util-deprecate@^1.0.2:
   resolved "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
+v-viewer@^3.0.11:
+  version "3.0.11"
+  resolved "https://registry.npmmirror.com/v-viewer/-/v-viewer-3.0.11.tgz#c03855eb56436bd0f5323c34a61c10fa8fd05026"
+  integrity sha512-E8LOdAxhzuktt4HB3PswVCccQ1Q1sYHYnLsS6zaJISpb5EvmAFs5sYNfXnDLFxVb5DQ82v4ZlGxkYlseXwWRJw==
+  dependencies:
+    lodash "^4.17.21"
+    viewerjs "^1.9.0"
+
+viewerjs@^1.9.0:
+  version "1.11.2"
+  resolved "https://registry.npmmirror.com/viewerjs/-/viewerjs-1.11.2.tgz#18eb326188225461f85d1e6430f43ba90623b907"
+  integrity sha512-z7N9R91ORhtLvOUxN7GoIl+MFVVMbtWNB1T2UmTKuMlzc4EevS+/bletZcIwDf8RIUzk2CFMdleQzcsjsfLl+A==
+
 "vite-plugin-build-info@git+https://github.com/OriLight152/vite-plugin-build-info":
   version "0.0.0"
   resolved "git+https://github.com/OriLight152/vite-plugin-build-info#3e1d40c3532a6f57a4d459107060e51d564c6fd2"
