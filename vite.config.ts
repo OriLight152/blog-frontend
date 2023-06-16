@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { vitePluginVersionMark } from 'vite-plugin-version-mark'
 import { vitePluginBuildInfo } from 'vite-plugin-build-info' 
 import path from 'path'
 

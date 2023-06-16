@@ -1,4 +1,4 @@
-export const baseURL = 'https://blog-server-api.amarea.cn'
+export const baseURL = './api'
 // export const baseURL = 'http://localhost:3000'
 export const imageUploadApiURL = 'https://img.amarea.cn/api/v1/upload'
 
